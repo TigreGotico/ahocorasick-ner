@@ -15,7 +15,7 @@ from ahocorasick_ner import AhocorasickNER
 
 class AhocorasickNERTransformer(IntentTransformer):
     def __init__(self, config=None):
-        super().__init__("ahocorasick-ner", 5, config)
+        super().__init__("ovos-ahocorasick-ner-plugin", 5, config)
         self.matchers = {}
 
     def bind(self, bus):
@@ -45,9 +45,6 @@ class AhocorasickNERTransformer(IntentTransformer):
 
         # expand templates
         samples = deduplicate_list(flatten_list([expand_template(s) for s in samples]))
-
-        # we only care about keyword extractors, drop the rest
-        samples = [s for s in samples if "{" in s]
 
         return lang, skill_id, name, samples, blacklisted_words
 
