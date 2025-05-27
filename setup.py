@@ -37,12 +37,15 @@ def required(requirements_file):
         return [pkg for pkg in requirements
                 if pkg.strip() and not pkg.startswith("#")]
 
+PLUGIN_ENTRY_POINT = 'ovos-ahocorasick-ner-plugin=ahocorasick_ner.opm:AhocorasickNERTransformer'
+
 
 setup(
     name="ahocorasick-ner",
     version=get_version(),
     modules=["ahocorasick_ner"],
     install_requires=required("requirements.txt"),
+    entry_points={'opm.transformer.intent': PLUGIN_ENTRY_POINT},
     author="JarbasAI",
     author_email="jarbasai@mailfence.com",
     description="A fast, dictionary-based Named Entity Recognition system using the Aho-Corasick algorithm.",
