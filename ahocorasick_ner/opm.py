@@ -53,7 +53,8 @@ class AhocorasickNERTransformer(IntentTransformer):
 
     def handle_register_entity(self, message: Message):
         lang, skill_id, entity_name, samples, _ = self._unpack_object(message)
-        if not samples:
+        if not samples or not entity_name:
+            LOG.warning(f"Skipping entity registration: empty samples or entity_name for {skill_id}")
             return
         if lang not in self.matchers:
             self.matchers[lang] = {}
@@ -68,14 +69,23 @@ class AhocorasickNERTransformer(IntentTransformer):
         Optionally transform intent handler data
         e.g. NER could be performed here by modifying intent.match_data
         """
-        sess = intent.updated_session or SessionManager.get()
-        matchers = self.matchers.get(sess.lang)
-        if matchers:
-            skill_id = intent.skill_id or intent.match_type.split(":")[0]
-            if skill_id in matchers:
-                entities = {e["label"]: e["word"]
-                            for e in matchers[skill_id].tag(intent.utterance)}
-                LOG.debug(f"{skill_id} keywords match: {entities}")
-                if entities:
-                    intent.match_data.update(entities)
+        try:
+            sess = intent.updated_session or SessionManager.get()
+            matchers = self.matchers.get(sess.lang)
+            if matchers:
+                skill_id = intent.skill_id or (
+                    intent.match_type.split(":")[0]
+                    if ":" in intent.match_type
+                    else intent.match_type
+                )
+                if skill_id in matchers:
+                    entities = {
+                        e["label"]: e["word"]
+                        for e in matchers[skill_id].tag(intent.utterance)
+                    }
+                    LOG.debug(f"{skill_id} keywords match: {entities}")
+                    if entities:
+                        intent.match_data.update(entities)
+        except Exception as e:
+            LOG.error(f"Error in AhocorasickNERTransformer.transform: {e}")
         return intent
