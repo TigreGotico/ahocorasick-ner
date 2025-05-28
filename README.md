@@ -1,3 +1,5 @@
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TigreGotico/ahocorasick-ner)
+
 # AhocorasickNER
 
 A fast and simple Named Entity Recognition (NER) tool based on the Aho-Corasick algorithm. This package is ideal for rule-based entity extraction using pre-defined vocabularies, especially when speed and scalability matter.
