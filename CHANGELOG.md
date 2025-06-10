@@ -1,12 +1,12 @@
 # Changelog
 
-## [0.1.0a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.0a1) (2025-05-27)
+## [0.1.1a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.1a1) (2025-06-10)
 
-[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.0.1...0.1.0a1)
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.0...0.1.1a1)
 
 **Merged pull requests:**
 
-- feat: ovos plugin [\#1](https://github.com/TigreGotico/ahocorasick-ner/pull/1) ([JarbasAl](https://github.com/JarbasAl))
+- fix: typing [\#3](https://github.com/TigreGotico/ahocorasick-ner/pull/3) ([JarbasAl](https://github.com/JarbasAl))
 
 
 
