@@ -1,12 +1,12 @@
 # Changelog
 
-## [0.1.1a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.1a1) (2025-06-10)
+## [0.1.2a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.2a1) (2025-12-18)
 
-[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.0...0.1.1a1)
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.1...0.1.2a1)
 
 **Merged pull requests:**
 
-- fix: typing [\#3](https://github.com/TigreGotico/ahocorasick-ner/pull/3) ([JarbasAl](https://github.com/JarbasAl))
+- chore: Configure Renovate [\#5](https://github.com/TigreGotico/ahocorasick-ner/pull/5) ([renovate[bot]](https://github.com/apps/renovate))
 
 
 
