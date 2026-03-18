@@ -6,103 +6,103 @@ A fast and simple Named Entity Recognition (NER) tool based on the Aho-Corasick 
 
 ---
 
-## ✨ Features
+## Features
 
-- ✅ Ultra-fast multi-pattern string matching using [Aho-Corasick](https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm)
-- ✅ Word-boundary-aware matching
-- ✅ Case-sensitive or case-insensitive modes
-- ✅ Minimal dependencies
-- ✅ Designed for integration with Hugging Face Datasets and similar sources
-
----
-
-## 🧠 Theoretical Background
-
-The Aho-Corasick algorithm, developed by Alfred V. Aho and Margaret J. Corasick in 1975, constructs a **finite state machine** from a set of keywords to allow **simultaneous pattern matching** in linear time. It's similar to a Trie, but extended with failure transitions that allow it to efficiently handle mismatches and overlapping substrings.
-
-This approach is **ideal for dictionary-based NER systems**, where:
-- You have a fixed list of entities (e.g., names, locations, products)
-- You want to search for **many patterns in a single pass**
-- Speed and low memory usage are critical
-
-Unlike statistical or neural NER systems, this approach doesn't require training and is fully deterministic. It is particularly useful when:
-- You want **consistent results**
-- You are working with **domain-specific vocabularies**
-- You need to process **large corpora quickly**
+- Ultra-fast multi-pattern string matching using [Aho-Corasick](https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm)
+- Word-boundary-aware matching with greedy longest-match
+- Case-sensitive or case-insensitive modes
+- **Three inference backends**: pyahocorasick (C), pure numpy, ONNX
+- OpenVoiceOS plugin integration
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ```bash
-pip install ahocorasick-ner
+uv pip install ahocorasick-ner                    # core (pyahocorasick backend)
+uv pip install ahocorasick-ner[numpy]             # + pure numpy backend
+uv pip install ahocorasick-ner[onnx]              # + ONNX export/inference
+uv pip install ahocorasick-ner[datasets]          # + HuggingFace dataset loaders
 ```
 
 ---
 
-## 🛠️ Usage
+## Quick Start
 
 ```python
 from ahocorasick_ner import AhocorasickNER
-from datasets import load_dataset
 
-EncyclopediaMetallvm = AhocorasickNER()
+ner = AhocorasickNER()
+ner.add_word("city", "New York")
+ner.add_word("city", "London")
+ner.add_word("country", "Japan")
+ner.fit()
 
-dataset_name = "Jarbas/metal-archives-tracks"
-dataset = load_dataset(dataset_name)["train"]
-for entry in dataset:
-    EncyclopediaMetallvm.add_word("artist_name", entry["band_name"])
-    if entry.get("track_name"):
-        EncyclopediaMetallvm.add_word("track_name", entry["track_name"])
-    if entry.get("album_name"):
-        EncyclopediaMetallvm.add_word("album_name", entry["album_name"])
-    EncyclopediaMetallvm.add_word("album_type", entry["album_type"])
-
-dataset_name = "Jarbas/metal-archives-bands"
-dataset = load_dataset(dataset_name)["train"]
-for entry in dataset:
-    EncyclopediaMetallvm.add_word("artist_name", entry["name"])
-    if entry.get("genre"):
-        EncyclopediaMetallvm.add_word("music_genre", entry["genre"])
-    if entry.get("label"):
-        EncyclopediaMetallvm.add_word("record_label", entry["label"])
-    if entry.get("country"):
-        EncyclopediaMetallvm.add_word("country", entry["country"])
-
-for entity in EncyclopediaMetallvm.tag("I fucking love black metal from Norway"):
+for entity in ner.tag("I flew from New York to London, then on to Japan."):
     print(entity)
+# {'start': 14, 'end': 21, 'word': 'New York', 'label': 'city'}
+# {'start': 26, 'end': 31, 'word': 'London', 'label': 'city'}
+# {'start': 44, 'end': 48, 'word': 'Japan', 'label': 'country'}
 ```
 
-### Output:
+---
+
+## Backends
+
+All three backends share the same `add_word` / `fit` / `tag` / `save` / `load` API.
+
+| Backend | Import | Dependency | Persistence | Use case |
+|---------|--------|-----------|-------------|----------|
+| **pyahocorasick** | `from ahocorasick_ner import AhocorasickNER` | `pyahocorasick` (C ext) | `.ahocorasick` (pickle) | Fastest; default |
+| **numpy** | `from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER` | `numpy` | `.npz` | No C deps; portable |
+| **ONNX** | `from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER` | `onnx` + `onnxruntime` | `.onnx` + `.npz` | Edge/WASM deployment |
+
 ```python
-{'start': 15, 'end': 25, 'word': 'black metal', 'label': 'genre'}
-{'start': 32, 'end': 37, 'word': 'Norway', 'label': 'country'}
+# Numpy backend — no C extensions at inference
+from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
+ner = NumpyAhocorasickNER()
+ner.add_word("city", "Tokyo")
+ner.fit()
+ner.save("model.npz")
+
+# ONNX backend — portable to any onnxruntime deployment
+from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
+ner = OnnxAhocorasickNER()
+ner.add_word("city", "Tokyo")
+ner.fit()
+ner.save("model")  # creates model.onnx + model.npz
+```
+
+See [`examples/`](examples/) for complete working examples and a benchmark script.
+
+---
+
+## Benchmarks
+
+With 100k+ known phrases, this tool can tag documents in milliseconds thanks to the Aho-Corasick FSM structure. Run the benchmark yourself:
+
+```bash
+uv pip install ahocorasick-ner[numpy,onnx]
+uv run python examples/benchmark.py
 ```
 
 ---
 
-## 🧪 Benchmarks
+## Limitations
 
-With 100k+ known phrases, this tool can tag documents in milliseconds thanks to the Aho-Corasick FSM structure. It scales gracefully with both the number of patterns and the size of input text.
-
----
-
-## 🧩 Limitations
-
-- Does not handle nested or overlapping entities well (greedy, longest match wins)
-- No fuzzy matching (e.g., typos or misspellings won't match)
-- Requires all entities to be known beforehand
-
+- Greedy longest-match only — no nested or overlapping entities
+- No fuzzy matching (typos or misspellings won't match)
+- All entities must be known beforehand
 
 ---
 
-## 📄 License
+## License
 
-MIT — free for commercial and non-commercial use.
+Apache 2.0 — free for commercial and non-commercial use.
 
 ---
 
-## 🙏 Acknowledgements
+## Acknowledgements
 
-- [pyahocorasick](https://github.com/WojciechMula/pyahocorasick) — The underlying C-based Aho-Corasick implementation
-- [Hugging Face Datasets](https://huggingface.co/docs/datasets) — For loading domain-specific corpora
+- [pyahocorasick](https://github.com/WojciechMula/pyahocorasick) — C-based Aho-Corasick implementation
+- [Hugging Face Datasets](https://huggingface.co/docs/datasets) — Domain-specific corpora

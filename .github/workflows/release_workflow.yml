@@ -9,7 +9,7 @@ on:
 jobs:
 
   publish_alpha:
-    uses: TigreGotico/gh-automations/.github/workflows/publish-alpha.yml@master
+    uses: OpenVoiceOS/gh-automations/.github/workflows/publish-alpha.yml@dev
     secrets: inherit
     with:
       branch: 'dev'

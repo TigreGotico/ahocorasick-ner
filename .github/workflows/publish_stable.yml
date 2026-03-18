@@ -6,7 +6,7 @@ on:
 
 jobs:
   publish_stable:
-    uses: TigreGotico/gh-automations/.github/workflows/publish-stable.yml@master
+    uses: OpenVoiceOS/gh-automations/.github/workflows/publish-stable.yml@dev
     secrets: inherit
     with:
       branch: 'master'
