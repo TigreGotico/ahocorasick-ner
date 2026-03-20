@@ -1,174 +1,174 @@
-# Ahocorasick NER — Documentation
+# ahocorasick-ner Documentation
 
-Fast, dictionary-based Named Entity Recognition using the Aho-Corasick algorithm.
+**Fast, dictionary-based Named Entity Recognition using the Aho-Corasick algorithm.**
 
----
-
-## Quick Start
-
-### Installation
-```bash
-# Core library
-uv pip install ahocorasick-ner
-
-# With HuggingFace dataset support
-uv pip install ahocorasick-ner[datasets]
-```
-
-### Programmatic Usage
-```python
-from ahocorasick_ner import AhocorasickNER
-
-ner = AhocorasickNER()
-ner.add_word("artist", "Metallica")
-ner.add_word("artist", "Iron Maiden")
-ner.add_word("album", "Master of Puppets")
-ner.fit()
-
-for entity in ner.tag("I love Metallica's Master of Puppets"):
-    print(entity)
-# Output:
-# {'start': 7, 'end': 16, 'word': 'Metallica', 'label': 'artist'}
-# {'start': 22, 'end': 40, 'word': 'Master of Puppets', 'label': 'album'}
-```
+This library excels at extracting known entities from text with zero machine learning overhead. Perfect for rule-based systems, knowledge graphs, and high-performance pipelines.
 
 ---
 
-## Architecture
+## Quick Links
 
-### Core Components
-
-#### `AhocorasickNER` — `ahocorasick_ner/__init__.py:7`
-Main NER engine. Wraps `pyahocorasick.Automaton` with word boundary detection and overlap resolution.
-
-**Key Methods**:
-- `add_word(label: str, example: str)` — register entity
-- `fit()` — finalize automaton (required before tagging)
-- `tag(haystack: str, min_word_len: int = 5)` — find entities
-- `save(path)` / `load(path)` — persist automaton via pickle
-
-**Algorithms**:
-- **Word Boundary Detection** — regex `\w` before/after match to skip partial words
-- **Overlap Resolution** — greedy longest-match-first; ties broken by start position
-- **Latency** — O(n) per character after O(m) fit time (m = total entity chars)
-
-#### Dataset Loaders
-Pre-built NER systems loaded from HuggingFace:
-- **Metal Archives** — `EncyclopediaMetallvmNER` — bands, tracks, albums (≈15K entities)
-- **Multi-Genre Music** — `MusicNER` — classical, jazz, prog, trance, metal (≈50K)
-- **IMDB** — `ImdbNER` — actors, directors, writers, composers (≈20K)
-
-Each extends `AhocorasickNER` and implements `load_huggingface()`.
+- **[Getting Started](getting-started.md)** — Installation and 5-minute quickstart
+- **[API Reference](api-reference.md)** — Complete method signatures and usage
+- **[Backends](backends.md)** — Pyahocorasick, NumPy, ONNX comparison
+- **[Algorithms](algorithms.md)** — How Aho-Corasick works, word boundaries, overlap resolution
+- **[Examples](examples.md)** — Real-world usage patterns
+- **[Integration](integration.md)** — OpenVoiceOS plugin setup
+- **[Datasets](datasets.md)** — Using pre-built entity loaders (Metal, Music, IMDB)
+- **[Performance](performance.md)** — Benchmarks, profiling, optimization
+- **[Troubleshooting](troubleshooting.md)** — Common issues and solutions
 
 ---
 
-## Development
+## What is Aho-Corasick NER?
 
-### Directory Structure
-```
-ahocorasick_ner/
-  __init__.py           # AhocorasickNER class
-  datasets.py           # Preset dataset loaders
-  opm.py               # OpenVoiceOS plugin
-  version.py           # Version string
+The Aho-Corasick algorithm is a finite state machine for multi-pattern string matching:
 
-docs/
-  index.md             # This file
+| Property | Value |
+|----------|-------|
+| **Fit time** | O(m) — m = sum of entity lengths |
+| **Match time** | O(n + z) — n = text length, z = matches |
+| **Setup** | Instant (no training, no ML) |
+| **Vocab size** | 1K–1M+ entities |
+| **Accuracy** | 100% for exact matches |
 
-test/
-  unittests/
-    test_ner.py        # Core NER unit tests
-```
-
-### Running Tests
-```bash
-# Core NER tests
-uv run pytest test/unittests/ -v
-
-# With coverage
-uv run pytest test/unittests/ --cov=ahocorasick_ner --cov-report=term-missing
-```
-
----
-
-## Performance Notes
-
-### Aho-Corasick Guarantees
-- **Fit time**: O(m) where m = sum of entity lengths
-- **Match time**: O(n + z) where n = text length, z = number of matches
-- **Memory**: ~64 bytes per trie node (heuristic estimate)
-
-### Overlap Handling
-Greedy longest-match strategy:
-1. Find all overlapping matches
-2. Sort by length (descending), then by position
-3. Select non-overlapping matches in order
-
-Example: entities ["abc", "bcd", "bcde"] + text "abcde"
-- Candidates: (0,2, "abc"), (1,3, "bcd"), (1,4, "bcde")
-- Sorted: (1,4, "bcde"), (1,3, "bcd"), (0,2, "abc")
-- Selected: (1,4, "bcde") — blocks (1,3) and (0,2) because they overlap
-
-### Estimated RAM
-- Base automaton: ~100-500 bytes (overhead)
-- Per entity: ~64 bytes per character in trie
-- Example: 10K entities × 20 chars avg = ~12.8 MB
-
-Actual memory depends on:
-- Automaton compression (shared prefixes)
-- Python object overhead
-- System allocator fragmentation
-
----
-
-## Comparison to Alternatives
-
-| Feature | Aho-Corasick | Regex | Fuzzy | Transformer |
-|---------|-------------|-------|-------|------------|
-| Speed | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | ⭐ |
-| Simplicity | ⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | ⭐ |
-| Setup | Instant | Instant | Requires tuning | Training required |
-| Large vocab (10K+) | Best | Slow | Slow | N/A |
-| Typo tolerance | None | Possible | Yes | Yes |
-| Interpretability | 100% | 100% | ~80% | ~20% |
-
-Use Aho-Corasick when:
-- ✅ Large, well-defined vocabularies (1K–1M+ entities)
+**When to use:**
+- ✅ Large, well-defined vocabularies
 - ✅ Exact matching with clear labels
 - ✅ Low latency required
-- ✅ Explainability matters
+- ✅ Explainability matters (no black box)
 
-Use alternatives when:
-- ❌ Need fuzzy/typo tolerance
-- ❌ Entity boundaries are ambiguous
-- ❌ Morphological variation (e.g., plurals)
-- ❌ Context-dependent meanings (NER models better)
+**When NOT to use:**
+- ❌ Need fuzzy/typo tolerance → use `rapidfuzz`
+- ❌ Morphological variation (plurals, tenses) → use NLP models
+- ❌ Context-dependent meanings → use transformers
 
 ---
 
-## Troubleshooting
+## Core Concepts
 
-**Q: Tagging is too slow**
-- **Cause**: Large vocabulary (>100K entities) or very long text (>10K chars)
-- **Fix**: Reduce vocabulary or filter text before tagging
+### Automaton
+A finite state machine (FSM) built from entities. Once finalized via `fit()`, searches are O(n) regardless of vocabulary size.
 
-**Q: Word boundaries skip valid entities**
-- **Cause**: Entities contain underscores or special characters that `\w` matches
-- **Fix**: Adjust `min_word_len` or modify regex in `ahocorasick_ner/__init__.py:91`
+```python
+ner = AhocorasickNER()
+ner.add_word("city", "New York")
+ner.add_word("city", "London")
+ner.fit()  # Build FSM
+```
 
-**Q: Import jobs never complete**
-- **Cause**: HuggingFace dataset not found or network issue
-- **Fix**: Check dataset name at huggingface.co/datasets; enable verbose logging
+### Word Boundaries
+By default, matches must respect word boundaries (alphanumeric before/after). This prevents "New York" from matching inside "NewYork_Inc".
+
+```python
+ner.tag("I visited NewYork_Inc in New York")
+# Only matches "New York", not inside "NewYork_Inc"
+```
+
+### Overlap Resolution
+When entities overlap, the library uses greedy longest-match-first strategy:
+
+```python
+ner.add_word("entity", "abc")
+ner.add_word("entity", "bcd")
+ner.add_word("entity", "bcde")
+ner.fit()
+
+# In text "abcde":
+# Candidates: "abc", "bcd", "bcde"
+# Selected: "bcde" (longest; blocks overlapping matches)
+```
+
+---
+
+## Three Backends
+
+| Backend | Use Case | Speed | Dependencies |
+|---------|----------|-------|--------------|
+| **pyahocorasick** | Production (default) | ⭐⭐⭐⭐⭐ Fastest | C extension (compiles native) |
+| **NumPy** | Portable | ⭐⭐⭐⭐ | Pure Python, requires numpy |
+| **ONNX** | Edge/WASM | ⭐⭐⭐⭐ | onnxruntime (cross-platform) |
+
+All three share the same API — switch backends without code changes:
+
+```python
+from ahocorasick_ner import AhocorasickNER          # pyahocorasick
+from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
+from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
+```
+
+See **[Backends](backends.md)** for detailed comparison.
+
+---
+
+## Pre-built Datasets
+
+Load curated entity vocabularies from HuggingFace:
+
+```python
+from ahocorasick_ner.datasets import EncyclopediaMetallvmNER, MusicNER, ImdbNER
+
+# Metal Archives (bands, tracks, albums — ~15K entities)
+metal_ner = EncyclopediaMetallvmNER()
+metal_ner.tag("Metallica played Master of Puppets")
+
+# Multi-genre music (classical, jazz, prog, trance, metal — ~50K)
+music_ner = MusicNER()
+
+# IMDB (actors, directors, writers, composers — ~20K)
+imdb_ner = ImdbNER()
+```
+
+See **[Datasets](datasets.md)** for full documentation.
+
+---
+
+## OpenVoiceOS Integration
+
+Automatically register entities and perform NER on OVOS utterances:
+
+```python
+# In your skill:
+self.register_entity("artist_name", ["Metallica", "Iron Maiden"])
+
+# OVOS Transformer plugin listens for registration and injects matches
+# into the intent match context — available in your intent handler
+```
+
+See **[Integration](integration.md)** for setup and examples.
+
+---
+
+## Performance Expectations
+
+### Fit Time
+- 100 entities: ~1 ms
+- 10K entities: ~50 ms
+- 100K entities: ~500 ms
+
+### Match Time
+- Text length 100 chars: <1 ms
+- Text length 10K chars: 5–10 ms
+- O(n) complexity regardless of vocabulary size
+
+### RAM Estimate
+- Heuristic: ~64 bytes per trie node
+- 10K entities × 20 chars average: ~12.8 MB
+- Actual: system-dependent (Python overhead, compression, allocator)
+
+See **[Performance](performance.md)** for benchmarks and profiling.
 
 ---
 
 ## License
-Apache 2.0
+
+Apache 2.0 — free for commercial and non-commercial use.
 
 ---
 
-## See Also
-- `FAQ.md` — Common questions and gotchas
-- `AUDIT.md` — Known issues and design notes
-- `SUGGESTIONS.md` — Future enhancements
-- `MAINTENANCE_REPORT.md` — Change history
+## Getting Help
+
+- **Quick answers**: See [Troubleshooting](troubleshooting.md)
+- **API details**: See [API Reference](api-reference.md)
+- **Usage patterns**: See [Examples](examples.md)
+- **Internals**: See [Algorithms](algorithms.md)
