@@ -19,14 +19,14 @@ for entity in entities:
     if entity in text:
         print(f"Found: {entity}")
 # Time: O(n * m * k)  where n=patterns, m=text length, k=pattern length
-```
+```text
 
 **Aho-Corasick approach** (single pass):
 ```python
 # Build FSM once: O(m) where m = sum of pattern lengths
 # Search all patterns: O(n) where n = text length
 # Total: O(m + n)  regardless of number of patterns!
-```
+```text
 
 ### How It Works
 
@@ -34,7 +34,7 @@ for entity in entities:
 
 Given entities: "he", "she", "his", "hers"
 
-```
+```text
        root
       / | \
      h  s  [others]
@@ -50,7 +50,7 @@ Given entities: "he", "she", "his", "hers"
     s
     |
    (hers)
-```
+```text
 
 **Complexity:** O(m) where m = sum of all pattern lengths
 
@@ -58,14 +58,14 @@ Given entities: "he", "she", "his", "hers"
 
 When a character doesn't match, jump to the longest suffix that *is* a prefix of another pattern.
 
-```
+```text
 Input: "ushers"
        u -> [fail] -> s
        s -> h
        h -> e
        e -> r
        r -> s (match "hers")
-```
+```text
 
 **Complexity:** O(m + alphabet_size)
 
@@ -82,7 +82,7 @@ for char in text:
     current_state = current_state.edges.get(char, root)
     if current_state.is_pattern:
         yield match(current_state.pattern, position)
-```
+```text
 
 **Complexity:** O(n + z) where n = text length, z = matches
 
@@ -102,7 +102,7 @@ ner.fit()
 
 list(ner.tag("We admire iron-will and iron gates"))
 # Matches "iron" in: "admire iron-will" (WRONG — inside "iron-will")
-```
+```text
 
 ### The Solution
 
@@ -113,7 +113,7 @@ before = processed_haystack[start - 1] if start > 0 else ' '
 after = processed_haystack[end + 1] if end + 1 < len(processed_haystack) else ' '
 if re.match(r'\w', before) or re.match(r'\w', after):
     continue  # skip: word character before/after = partial match
-```
+```text
 
 The regex `\w` matches: `[a-zA-Z0-9_]`
 
@@ -133,7 +133,7 @@ matches = list(ner.tag(text))
 #  {'start': 33, 'end': 36, 'word': 'Iron', 'label': 'band'}]
 
 # Skipped: "Iron" at start (capital, matches lowercase "iron" label)
-```
+```text
 
 ### Edge Cases
 
@@ -145,7 +145,7 @@ ner.fit()
 
 list(ner.tag("my_foo_bar"))  # [] — no match (underscore blocks it)
 list(ner.tag("my-foo-bar"))  # [match] — hyphen doesn't block it
-```
+```text
 
 **Customize via min_word_len:**
 ```python
@@ -154,7 +154,7 @@ ner.add_word("word", "a")  # 1 character
 ner.fit()
 
 list(ner.tag("a apple", min_word_len=1))  # Both "a"s match (no length filter)
-```
+```text
 
 ---
 
@@ -185,7 +185,7 @@ sorted_matches = [
     (1, 3, "bcd"),    # Middle: 3 chars
     (0, 2, "abc"),    # Shortest: 3 chars (tie, but starts earlier)
 ]
-```
+```text
 
 **Step 2: Greedy selection** — `ahocorasick_ner/__init__.py:99-105`:
 
@@ -198,17 +198,17 @@ for start, end, word, label in sorted_matches:
     if all(i not in used_positions for i in range(start, end + 1)):
         selected.append((start, end, word, label))
         used_positions.update(range(start, end + 1))
-```
+```text
 
 **Result:**
-```
+```text
 Positions: 0 1 2 3 4
 Match 1:   [b c d e]     — selected (no conflicts)
 Match 2:       [b c d]   — skipped (overlaps with match 1)
 Match 3: [a b c]         — skipped (overlaps with match 1)
 
 Selected: [(1, 4, "bcde")]
-```
+```text
 
 ### Examples
 
@@ -225,7 +225,7 @@ matches = list(ner.tag(text))
 # [{'start': 7, 'end': 13, 'word': 'the cat', 'label': 'entity'}]
 # Selected: "the cat" (longest, 7 chars)
 # Skipped: "the" and "cat" (subsumed by longer match)
-```
+```text
 
 **Example 2: Non-overlapping matches**
 ```python
@@ -239,7 +239,7 @@ text = "Metallica's Master of Puppets and Iron Maiden's The Number of the Beast"
 matches = list(ner.tag(text))
 # All four matches selected (no overlaps)
 # [{'start': 0, ...}, {'start': 13, ...}, {'start': 48, ...}, {'start': 62, ...}]
-```
+```text
 
 **Example 3: Same length, different start positions**
 ```python
@@ -252,7 +252,7 @@ text = "abc"
 matches = list(ner.tag(text, min_word_len=1))
 # Sorted: [(0, 1, "ab"), (1, 2, "bc")]  — same length, sorted by start
 # Selected: (0, 1, "ab")  — chosen first, blocks (1, 2)
-```
+```text
 
 ---
 
@@ -270,7 +270,7 @@ ner.fit()
 matches = list(ner.tag("I LOVE METALLICA"))
 # [{'word': 'METALLICA', 'label': 'band'}]
 # Original case preserved, but match is case-insensitive
-```
+```text
 
 **Implementation** — `ahocorasick_ner/__init__.py:51, 78`:
 ```python
@@ -281,7 +281,7 @@ key = example.lower() if not self.case_sensitive else example
 processed_haystack = haystack.lower() if not self.case_sensitive else haystack
 # ...search in lowercase...
 # But yield original case from haystack
-```
+```text
 
 ### Case-Sensitive
 
@@ -293,7 +293,7 @@ ner.fit()
 list(ner.tag("I LOVE METALLICA"))       # [] — no match (wrong case)
 list(ner.tag("I LOVE Metallica"))       # [match]
 list(ner.tag("I LOVE metallica"))       # [] — no match
-```
+```text
 
 ---
 
@@ -301,40 +301,40 @@ list(ner.tag("I LOVE metallica"))       # [] — no match
 
 ### Build Phase (Trie + Failure Links)
 
-```
+```text
 Operation         | Complexity | Notes
 ------------------|-----------|---------------------------------------------
 Create empty trie | O(1)       | Just root node
 Add N entities    | O(m)       | m = sum of entity lengths
 Build FSM         | O(m)       | BFS to compute failure links
 Total             | O(m)       | Practical: 50ms for 10K entities
-```
+```text
 
 ### Search Phase (Match)
 
-```
+```text
 Operation         | Complexity | Notes
 ------------------|-----------|---------------------------------------------
 Scan text         | O(n)       | n = text length
 Follow edges/fails| O(1)       | Per character (amortized)
 Report matches    | O(z)       | z = number of matches
 Total             | O(n + z)   | Practical: 5ms for 10K chars
-```
+```text
 
 ### Memory
 
-```
+```text
 Component         | Usage     | Notes
 ------------------|-----------|---------------------------------------------
 Trie structure    | O(m)      | m = sum of entity lengths
 Failure links     | O(m)      | One per trie node
 Automaton cache   | O(m)      | pyahocorasick uses state compression
 Total per entity  | ~64 bytes | Heuristic estimate per trie node
-```
+```text
 
 ### Comparison to Alternatives
 
-```
+```text
 Algorithm         | Build | Search | Setup | Memory | Typos
 ------------------|-------|--------|-------|--------|-------
 Aho-Corasick      | O(m)  | O(n+z) | Easy  | Low    | None
@@ -343,7 +343,7 @@ Regex (naive)     | O(1)  | O(n*m) | Fast  | Low    | Hard
 Fuzzy match       | O(m)  | O(n*m) | Hard  | High   | Yes
 Transformer NER   | O(1)  | O(n)   | Very  | Very   | Yes
               |      |        | Hard  | High   |
-```
+```text
 
 ---
 
@@ -358,20 +358,20 @@ class TrieNode:
     fail_link: Optional[TrieNode]     # Failure link (BFS computed)
     is_pattern: bool                   # Does this node end a pattern?
     pattern: Optional[Tuple[str, str]] # (label, word) if is_pattern
-```
+```text
 
 ### Automaton State Representation
 
 pyahocorasick uses an efficient binary format:
 
-```
+```text
 State ID | Edges | Fail Link | Pattern? | Pattern Data
 ---------|-------|-----------|----------|-------------------
 0        | 256   | -1        | No       | None
 1        | 256   | 0         | Yes      | ("artist", "Iron")
 2        | 256   | 1         | No       | None
 ...      | ...   | ...       | ...      | ...
-```
+```text
 
 See `pyahocorasick` documentation for C-level details.
 

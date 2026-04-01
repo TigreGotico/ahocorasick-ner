@@ -8,18 +8,18 @@ Benchmarks, profiling, and optimization strategies.
 
 ### Machine Setup
 
-```
+```text
 CPU: Intel Core i7-9700K @ 3.6 GHz
 RAM: 32 GB
 Python: 3.11
 Backend: pyahocorasick (C-based)
-```
+```text
 
 ### Fit Time
 
 Time to build automaton from entities.
 
-```
+```text
 Entities | Time (ms) | RAM (MB)
 ---------|-----------|----------
 100      | 1         | 0.5
@@ -28,7 +28,7 @@ Entities | Time (ms) | RAM (MB)
 10K      | 50        | 15
 50K      | 300       | 80
 100K     | 600       | 160
-```
+```text
 
 **Complexity:** O(m) where m = sum of entity lengths
 
@@ -44,21 +44,21 @@ for count in [100, 1000, 5000, 10000]:
     ner.fit()
     elapsed = time.time() - start
     print(f"{count} entities: {elapsed*1000:.1f}ms")
-```
+```text
 
 ### Tag Time
 
 Time to extract entities from text.
 
 **Single Text:**
-```
+```text
 Text Length | 100 chars | 1K chars | 10K chars | 100K chars
 ------------|-----------|----------|-----------|----------
 5K entities| 2ms       | 5ms      | 50ms      | 500ms
 10K        | 3ms       | 8ms      | 80ms      | 800ms
 50K        | 5ms       | 20ms     | 200ms     | 2000ms
 100K       | 10ms      | 40ms     | 400ms     | 4000ms
-```
+```text
 
 **Complexity:** O(n + z) where n = text length, z = matches
 
@@ -80,13 +80,13 @@ elapsed = time.time() - start
 
 print(f"1000 iterations: {elapsed:.2f}s ({1/elapsed:.0f} tags/sec)")
 # ~0.15s (6667 tags/sec)
-```
+```text
 
 ### Save/Load Time
 
 Persistence overhead.
 
-```
+```text
 Entities | Save (ms) | Load (ms)
 ---------|-----------|----------
 1K       | 2         | 3
@@ -94,7 +94,7 @@ Entities | Save (ms) | Load (ms)
 10K      | 10        | 15
 50K      | 50        | 60
 100K     | 100       | 120
-```
+```text
 
 ```python
 import time
@@ -117,7 +117,7 @@ ner2.load("model.ahocorasick")
 load_time = time.time() - start
 
 print(f"Save: {save_time*1000:.1f}ms, Load: {load_time*1000:.1f}ms")
-```
+```text
 
 ---
 
@@ -125,33 +125,33 @@ print(f"Save: {save_time*1000:.1f}ms, Load: {load_time*1000:.1f}ms")
 
 ### Speed (Tag Time, 1000 iterations, 10K entities)
 
-```
+```text
 Backend     | Speed      | Relative
 ------------|------------|----------
 pyahocorasick | 0.15s    | 1.0x (baseline)
 NumPy       | 0.35s      | 2.3x slower
 ONNX        | 0.40s      | 2.7x slower
-```
+```text
 
 ### Memory (Loaded Model)
 
-```
+```text
 Backend     | Memory
 ------------|--------
 pyahocorasick | 15 MB
 NumPy       | 25 MB
 ONNX        | 30 MB (includes .onnx file)
-```
+```text
 
 ### Installation Size
 
-```
+```text
 Backend     | Size
 ------------|--------
 pyahocorasick | 0.5 MB (binary)
 NumPy       | 20 MB
 ONNX        | ~10 MB (onnx) + ~50 MB (onnxruntime)
-```
+```text
 
 ---
 
@@ -177,15 +177,15 @@ profiler.disable()
 stats = pstats.Stats(profiler)
 stats.sort_stats("cumulative")
 stats.print_stats(10)
-```
+```text
 
 Output:
-```
+```text
 ncalls  tottime  cumtime   filename:lineno(function)
      1    0.001    0.020   __init__.py:55(fit)
      1    0.019    0.019   {pyahocorasick.make_automaton}
   2000    0.000    0.000   {built-in append}
-```
+```text
 
 ### Memory Profiling
 
@@ -202,12 +202,12 @@ def train_ner():
     return ner
 
 train_ner()
-```
+```text
 
 Run:
 ```bash
 python -m memory_profiler script.py
-```
+```text
 
 Output shows line-by-line memory usage.
 
@@ -234,7 +234,7 @@ relevant_entities = [...] # 5K entities
 for entity in relevant_entities:
     ner.add_word("entity", entity)
 ner.fit()  # ~20ms, 8MB
-```
+```text
 
 ### 2. Increase min_word_len
 
@@ -248,7 +248,7 @@ ner.tag(text, min_word_len=1)  # 100ms for 10K chars
 
 # ✅ Fast: Only match words >= 4 chars
 ner.tag(text, min_word_len=4)  # 30ms for 10K chars
-```
+```text
 
 ### 3. Cache NER Models
 
@@ -271,7 +271,7 @@ ner.load("prebuilt_model.ahocorasick")
 
 def process_text(text):
     return list(ner.tag(text))  # <5ms per document
-```
+```text
 
 ### 4. Use Appropriate Backend
 
@@ -291,7 +291,7 @@ ner = OnnxAhocorasickNER()
 # If no C compiler available: NumPy
 from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
 ner = NumpyAhocorasickNER()
-```
+```text
 
 ### 5. Batch Processing
 
@@ -307,17 +307,17 @@ results = [list(ner.tag(doc)) for doc in documents]
 from concurrent.futures import ThreadPoolExecutor
 with ThreadPoolExecutor(max_workers=4) as exe:
     results = list(exe.map(lambda doc: list(ner.tag(doc)), documents))
-```
+```text
 
 ### 6. Pre-compile Regular Expressions
 
 **Problem:** Word boundary checks re-compile regex
 
-**Solution:** Already optimized in code, but be aware
+**Note:** Word boundary checking uses regex matching in the hot path. For extremely high throughput, consider custom word-boundary logic or caching checks.
 
 ```python
-# ahocorasick_ner/__init__.py already compiles
-# This is already optimized, no user action needed
+# Word boundary check occurs per match
+# Use case_sensitive=True if not checking boundaries can reduce overhead
 ```
 
 ---
@@ -352,7 +352,7 @@ albums = list(ner_albums.tag(text))
 ner = AhocorasickNER()
 # Only add entities starting with "A", "B", "C" (rotate by character)
 # Require first character matches before tagging
-```
+```text
 
 ### For Real-time Systems (<10ms latency required)
 
@@ -377,7 +377,7 @@ from functools import lru_cache
 @lru_cache(maxsize=10000)
 def tag_cached(text):
     return tuple(ner.tag(text))
-```
+```text
 
 ---
 

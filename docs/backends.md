@@ -21,7 +21,7 @@ C-based implementation wrapping the `pyahocorasick` library.
 **Import:**
 ```python
 from ahocorasick_ner import AhocorasickNER
-```
+```text
 
 **Characteristics:**
 - ⭐⭐⭐⭐⭐ **Fastest** (native C code)
@@ -37,7 +37,7 @@ from ahocorasick_ner import AhocorasickNER
 **Installation:**
 ```bash
 uv pip install ahocorasick-ner
-```
+```text
 
 Requires C compiler:
 - **Linux**: `gcc`, `clang` (usually pre-installed)
@@ -61,7 +61,7 @@ for _ in range(1000):
 elapsed = time.time() - start
 print(f"1000 iterations: {elapsed:.2f}s ({1/elapsed:.0f} tags/sec)")
 # ~0.05s (20,000 tags/sec)
-```
+```text
 
 **API:**
 ```python
@@ -71,7 +71,7 @@ ner.fit()
 entities = list(ner.tag(text, min_word_len=5))
 ner.save(path)
 ner.load(path)
-```
+```text
 
 ---
 
@@ -82,7 +82,7 @@ Pure-Python implementation using NumPy arrays.
 **Import:**
 ```python
 from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
-```
+```text
 
 **Characteristics:**
 - ⭐⭐⭐⭐ **Fast** (optimized NumPy)
@@ -100,12 +100,12 @@ from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
 **Installation:**
 ```bash
 uv pip install ahocorasick-ner[numpy]
-```
+```text
 
 Or add to existing installation:
 ```bash
 uv pip install numpy
-```
+```text
 
 **Performance:**
 ```python
@@ -124,7 +124,7 @@ for _ in range(1000):
 elapsed = time.time() - start
 print(f"1000 iterations: {elapsed:.2f}s ({1/elapsed:.0f} tags/sec)")
 # ~0.10s (10,000 tags/sec) — ~2x slower than C backend
-```
+```text
 
 **Save/Load:**
 ```python
@@ -136,7 +136,7 @@ ner.save("model.npz")  # NumPy format
 # Later:
 ner2 = NumpyAhocorasickNER()
 ner2.load("model.npz")
-```
+```text
 
 **API (identical to pyahocorasick):**
 ```python
@@ -146,7 +146,7 @@ ner.fit()
 entities = list(ner.tag(text, min_word_len=5))
 ner.save(path)      # Saves .npz file
 ner.load(path)      # Loads .npz file
-```
+```text
 
 ---
 
@@ -157,7 +157,7 @@ ONNX (Open Neural Network Exchange) standard format for portable ML deployment.
 **Import:**
 ```python
 from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
-```
+```text
 
 **Characteristics:**
 - ⭐⭐⭐⭐ **Fast** (ONNX runtime optimizations)
@@ -175,7 +175,7 @@ from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
 **Installation:**
 ```bash
 uv pip install ahocorasick-ner[onnx]
-```
+```text
 
 Installs `onnx` and `onnxruntime`.
 
@@ -196,7 +196,7 @@ for _ in range(1000):
 elapsed = time.time() - start
 print(f"1000 iterations: {elapsed:.2f}s ({1/elapsed:.0f} tags/sec)")
 # ~0.10s (10,000 tags/sec) — comparable to NumPy
-```
+```text
 
 **Save/Load:**
 ```python
@@ -208,7 +208,7 @@ ner.save("model")  # Creates model.onnx + model.npz
 # Later, in any ONNX runtime:
 ner2 = OnnxAhocorasickNER()
 ner2.load("model")
-```
+```text
 
 **Deploying to WASM (Browser):**
 
@@ -216,7 +216,7 @@ ner2.load("model")
 // Load ONNX model in browser with ONNX.js
 const session = await ort.InferenceSession.create('model.onnx');
 const result = await session.run(input);
-```
+```text
 
 See ONNX.js documentation for browser integration.
 
@@ -226,7 +226,7 @@ ONNX models can be converted to TFLite format:
 ```bash
 onnx-tf convert -i model.onnx -o model/
 tflite_convert --output_file=model.tflite --saved_model_dir=model/
-```
+```text
 
 **API (identical to pyahocorasick):**
 ```python
@@ -236,7 +236,7 @@ ner.fit()
 entities = list(ner.tag(text, min_word_len=5))
 ner.save(path)  # Saves model.onnx + model.npz
 ner.load(path)  # Loads from model.onnx + model.npz
-```
+```text
 
 ---
 
@@ -246,7 +246,7 @@ Benchmark: 5K–50K entities, varying text lengths.
 
 ### Match Time (ms for 1000 iterations)
 
-```
+```text
 Text: "entity_2500 is here" repeated N times
 
 Entities | 100 chars | 1K chars | 10K chars
@@ -262,28 +262,28 @@ Entities | 100 chars | 1K chars | 10K chars
 50K       | 20 ms     | 150 ms   | 1100 ms  (pyahocorasick)
 50K       | 40 ms     | 300 ms   | 2200 ms  (numpy)
 50K       | 48 ms     | 360 ms   | 2400 ms  (onnx)
-```
+```text
 
 ### Memory Usage
 
-```
+```text
 Entities | pyahocorasick | NumPy | ONNX
 ----------|--------------|-------|------
 5K        | ~2 MB        | ~3 MB | ~3 MB
 10K       | ~4 MB        | ~6 MB | ~6 MB
 50K       | ~20 MB       | ~30 MB| ~30 MB
-```
+```text
 
 ### Installation Size
 
-```
+```text
 Package      | Size
 -------------|--------
 pyahocorasick| ~500 KB (compiled binary)
 numpy        | ~20 MB
 onnx         | ~10 MB
 onnxruntime  | ~50 MB
-```
+```text
 
 ---
 
@@ -299,7 +299,7 @@ ner = AhocorasickNER()
 ner.add_word("artist", "Metallica")
 ner.fit()
 entities = list(ner.tag("I like Metallica"))
-```
+```text
 
 **After (NumPy):**
 ```python
@@ -309,7 +309,7 @@ ner = NumpyAhocorasickNER()  # Only change: class name
 ner.add_word("artist", "Metallica")
 ner.fit()
 entities = list(ner.tag("I like Metallica"))
-```
+```text
 
 **After (ONNX):**
 ```python
@@ -319,7 +319,7 @@ ner = OnnxAhocorasickNER()  # Only change: class name
 ner.add_word("artist", "Metallica")
 ner.fit()
 entities = list(ner.tag("I like Metallica"))
-```
+```text
 
 ---
 

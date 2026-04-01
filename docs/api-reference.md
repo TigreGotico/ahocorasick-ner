@@ -12,7 +12,7 @@ Main class for dictionary-based Named Entity Recognition — `ahocorasick_ner/__
 
 ```python
 AhocorasickNER(case_sensitive: bool = False)
-```
+```text
 
 **Parameters:**
 - `case_sensitive` (bool) — If `False` (default), all matching is case-insensitive. If `True`, matching respects case.
@@ -30,7 +30,7 @@ ner = AhocorasickNER(case_sensitive=True)
 ner.add_word("city", "New York")
 ner.fit()
 list(ner.tag("I visited NEW YORK"))  # Does NOT match (wrong case)
-```
+```text
 
 ---
 
@@ -40,7 +40,7 @@ list(ner.tag("I visited NEW YORK"))  # Does NOT match (wrong case)
 
 ```python
 add_word(label: str, example: str) -> None
-```
+```text
 
 Register an entity for recognition.
 
@@ -60,7 +60,7 @@ ner.add_word("artist", "Metallica")
 ner.add_word("artist", "Iron Maiden")
 ner.add_word("album", "Master of Puppets")
 ner.fit()  # Required before tagging
-```
+```text
 
 ---
 
@@ -68,7 +68,7 @@ ner.fit()  # Required before tagging
 
 ```python
 fit() -> None
-```
+```text
 
 Finalize the Aho-Corasick automaton. Must be called after adding words before tagging.
 
@@ -93,7 +93,7 @@ ner.add_word("city", "Paris")  # Marks as unfitted
 ner.fit()  # Must re-fit
 
 entities = list(ner.tag("I visited Paris"))
-```
+```text
 
 ---
 
@@ -101,7 +101,7 @@ entities = list(ner.tag("I visited Paris"))
 
 ```python
 tag(haystack: str, min_word_len: int = 5) -> Iterable[Dict[str, Union[int, str]]]
-```
+```text
 
 Extract entities from text.
 
@@ -136,7 +136,7 @@ for entity in ner.tag(text):
 # Output:
 # Found: Metallica (artist)
 # Found: Master of Puppets (album)
-```
+```text
 
 **Word Length Filter:**
 ```python
@@ -151,7 +151,7 @@ list(ner.tag("Jo and John arrived"))  # []
 list(ner.tag("Jo and John arrived", min_word_len=2))
 # [{'start': 0, 'end': 1, 'word': 'Jo', 'label': 'name'},
 #  {'start': 8, 'end': 11, 'word': 'John', 'label': 'name'}]
-```
+```text
 
 ---
 
@@ -159,7 +159,7 @@ list(ner.tag("Jo and John arrived", min_word_len=2))
 
 ```python
 save(path: str) -> None
-```
+```text
 
 Save the trained automaton to disk.
 
@@ -182,7 +182,7 @@ ner.save("metal_ner.ahocorasick")
 ner2 = AhocorasickNER()
 ner2.load("metal_ner.ahocorasick")
 list(ner2.tag("Metallica rocks"))
-```
+```text
 
 ---
 
@@ -190,7 +190,7 @@ list(ner2.tag("Metallica rocks"))
 
 ```python
 load(path: str) -> None
-```
+```text
 
 Load a previously saved automaton from disk.
 
@@ -211,7 +211,7 @@ ner.load("metal_ner.ahocorasick")  # Load pre-trained
 # Use immediately
 entities = list(ner.tag("Metallica is awesome"))
 print(entities)
-```
+```text
 
 ---
 
@@ -228,7 +228,7 @@ ner = NumpyAhocorasickNER(case_sensitive=False)
 ner.add_word("artist", "Metallica")
 ner.fit()
 list(ner.tag("I like Metallica"))
-```
+```text
 
 **Key Differences:**
 - Save format: `.npz` (NumPy compressed array) instead of pickle
@@ -251,7 +251,7 @@ ner = OnnxAhocorasickNER(case_sensitive=False)
 ner.add_word("artist", "Metallica")
 ner.fit()
 list(ner.tag("I like Metallica"))
-```
+```text
 
 **Key Differences:**
 - Save format: Two files — `model.onnx` + `model.npz`
@@ -271,7 +271,7 @@ Pre-built entity vocabularies from HuggingFace.
 from ahocorasick_ner.datasets import EncyclopediaMetallvmNER
 
 ner = EncyclopediaMetallvmNER(path=None, case_sensitive=False)
-```
+```text
 
 Pre-loaded with Metal Archives data (~15K entities):
 - `artist_name` — Band names
@@ -295,7 +295,7 @@ ner = EncyclopediaMetallvmNER(path="metal_ner.ahocorasick")
 
 # Use immediately
 entities = list(ner.tag("Metallica and Black Sabbath defined metal"))
-```
+```text
 
 ---
 
@@ -305,7 +305,7 @@ entities = list(ner.tag("Metallica and Black Sabbath defined metal"))
 from ahocorasick_ner.datasets import MusicNER
 
 ner = MusicNER(path=None, case_sensitive=False)
-```
+```text
 
 Multi-genre music NER (~50K entities):
 - Metal Archives (bands, tracks, albums)
@@ -322,7 +322,7 @@ Multi-genre music NER (~50K entities):
 from ahocorasick_ner.datasets import ImdbNER
 
 ner = ImdbNER(path=None, case_sensitive=False)
-```
+```text
 
 IMDB entertainment data (~20K entities):
 - Actors
@@ -357,7 +357,7 @@ class MySkill(OVOSSkill):
         entities = message.data.get("entities", [])
         for entity in entities:
             print(f"Recognized: {entity['word']} ({entity['label']})")
-```
+```text
 
 See **[Integration](integration.md)** for full setup guide.
 
@@ -374,7 +374,7 @@ All tagging methods return entities as dictionaries:
     "word": "Metallica",         # Matched text (preserves original case)
     "label": "artist"            # Entity label from add_word()
 }
-```
+```text
 
 **Indices are 0-based:**
 ```python
@@ -383,7 +383,7 @@ text = "I love Metallica"
 entity["start"] = 7
 entity["end"] = 15
 text[entity["start"]:entity["end"]+1]  # "Metallica"
-```
+```text
 
 ---
 
@@ -398,7 +398,7 @@ try:
     ner.load("nonexistent.ahocorasick")
 except FileNotFoundError:
     print("Model file not found")
-```
+```text
 
 ### ImportError
 
@@ -407,7 +407,7 @@ Raised by dataset classes if HuggingFace `datasets` library not installed:
 ```python
 # Requires: uv pip install ahocorasick-ner[datasets]
 from ahocorasick_ner.datasets import MusicNER  # ImportError if datasets not installed
-```
+```text
 
 ---
 

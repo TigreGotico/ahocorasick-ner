@@ -13,13 +13,13 @@ Common issues and solutions.
 **Solution:**
 ```bash
 uv pip install ahocorasick-ner
-```
+```text
 
 Or activate correct virtual environment:
 ```bash
 source ~/.venvs/my_env/bin/activate
 pip install ahocorasick-ner
-```
+```text
 
 ---
 
@@ -36,12 +36,12 @@ pip install ahocorasick-ner
 2. **Or use NumPy backend (no compilation):**
    ```bash
    pip install ahocorasick-ner[numpy]
-   ```
+```text
 
 3. **Or use pre-compiled wheel (if available):**
    ```bash
    pip install --only-binary :all: ahocorasick-ner
-   ```
+```text
 
 ---
 
@@ -52,12 +52,12 @@ pip install ahocorasick-ner
 **Solution:**
 ```bash
 uv pip install ahocorasick-ner[datasets]
-```
+```text
 
 Or install separately:
 ```bash
 pip install datasets
-```
+```text
 
 ---
 
@@ -76,7 +76,7 @@ list(ner.tag("I like Metallica"))  # Returns empty
 # ✅ Fix:
 ner.fit()
 list(ner.tag("I like Metallica"))  # Now returns matches
-```
+```text
 
 **Cause 2: Text doesn't match exactly**
 
@@ -90,7 +90,7 @@ list(ner.tag("I LIKE metallica"))  # Matches "metallica"
 
 # But case is preserved in output
 list(ner.tag("I LIKE MetallicA"))  # Returns {'word': 'MetallicA', ...}
-```
+```text
 
 **Cause 3: Word boundaries blocking match**
 
@@ -105,7 +105,7 @@ list(ner.tag("This_iron_will"))  # Empty
 # ✅ Matches with space or punctuation
 list(ner.tag("This iron-will"))  # [match]
 list(ner.tag("This iron."))      # [match]
-```
+```text
 
 **Debug:**
 ```python
@@ -118,7 +118,7 @@ def debug_tag(ner, text):
             print(f"  [{i}] {repr(char)} - non-word")
 
 debug_tag(ner, "This_iron_will")
-```
+```text
 
 ---
 
@@ -140,7 +140,7 @@ ner.fit()
 matches = list(ner.tag("abcde"))
 # [{'start': 1, 'end': 4, 'word': 'bcde', 'label': 'entity'}]
 # Only "bcde" returned (longest)
-```
+```text
 
 ---
 
@@ -155,7 +155,7 @@ ner.add_word("artist", "Metallica")
 ner.fit()
 
 list(ner.tag("METALLICA"))  # [match] - case-insensitive
-```
+```text
 
 **Solution:**
 ```python
@@ -166,7 +166,7 @@ ner.fit()
 
 list(ner.tag("METALLICA"))   # [] - no match
 list(ner.tag("Metallica"))   # [match]
-```
+```text
 
 ---
 
@@ -181,7 +181,7 @@ def handle_request(text):
     ner.add_word("artist", "Metallica")
     ner.fit()  # 50ms every request!
     return list(ner.tag(text))
-```
+```text
 
 **Solution: Load once, reuse**
 
@@ -192,7 +192,7 @@ ner.load("prebuilt_model.ahocorasick")
 
 def handle_request(text):
     return list(ner.tag(text))  # <5ms
-```
+```text
 
 **Cause 2: Very large vocabulary**
 
@@ -202,7 +202,7 @@ ner = AhocorasickNER()
 for i in range(100000):
     ner.add_word("entity", f"term_{i}")
 ner.fit()  # ~600ms
-```
+```text
 
 **Solution: Reduce vocabulary or split into categories**
 
@@ -217,7 +217,7 @@ ner_album = AhocorasickNER()
 for album in albums:  # 10K entities
     ner_album.add_word("album", album)
 ner_album.fit()
-```
+```text
 
 ---
 
@@ -230,7 +230,7 @@ ner_album.fit()
 ```python
 # ❌ Wrong path
 ner.load("my_model.ahocorasick")  # File not found
-```
+```text
 
 **Solution:**
 ```python
@@ -248,7 +248,7 @@ else:
     # Load existing
     ner = AhocorasickNER()
     ner.load(model_path)
-```
+```text
 
 ---
 
@@ -267,7 +267,7 @@ except (EOFError, PickleError):
     ner.add_word("artist", "Metallica")
     ner.fit()
     ner.save("my_model.ahocorasick")
-```
+```text
 
 ---
 
@@ -287,7 +287,7 @@ ner = AhocorasickNER()  # C-based, faster
 from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
 ner = NumpyAhocorasickNER()
 # Use batch processing to amortize overhead
-```
+```text
 
 ---
 
@@ -303,7 +303,7 @@ ner = AhocorasickNER()
 
 # ✅ Reduce vocabulary size
 # Remove unnecessary entities before saving
-```
+```text
 
 ---
 
@@ -316,13 +316,13 @@ ner = AhocorasickNER()
 ```bash
 # Check if plugin is available
 ovos-config show | grep ahocorasick
-```
+```text
 
 **Solution:**
 ```bash
 # Reinstall
 uv pip install ahocorasick-ner
-```
+```text
 
 **Cause 2: Entities not registered**
 
@@ -336,7 +336,7 @@ class MySkill(OVOSSkill):
 class MySkill(OVOSSkill):
     def initialize(self):
         self.register_entity("artist", ["Metallica"])
-```
+```text
 
 **Cause 3: Text doesn't match exactly**
 
@@ -346,13 +346,13 @@ def handle_music(self, message):
     # If text is "play metallica" (lowercase)
     # But registered as "Metallica" (capitalized)
     # No match (case-sensitive by default)
-```
+```text
 
 **Solution:**
 ```python
 # Use case-insensitive matching
 self.register_entity("artist", ["metallica"])  # lowercase
-```
+```text
 
 ---
 
@@ -366,7 +366,7 @@ self.register_entity("artist", ["metallica"])  # lowercase
 # ❌ Out of memory: 100K entities
 from ahocorasick_ner.datasets import MusicNER
 ner = MusicNER()  # Takes ~150MB
-```
+```text
 
 **Solution:**
 ```python
@@ -380,7 +380,7 @@ ner = AhocorasickNER()
 for entity in necessary_entities:
     ner.add_word("entity", entity)
 ner.fit()
-```
+```text
 
 ---
 
@@ -402,7 +402,7 @@ for t in texts:
 
 # Thread 2: Adding entities (BAD!)
 ner.add_word("artist", "Iron Maiden")  # Race condition
-```
+```text
 
 **Solution: Load once, use read-only**
 
@@ -415,7 +415,7 @@ from concurrent.futures import ThreadPoolExecutor
 with ThreadPoolExecutor(max_workers=4) as exe:
     # Multiple threads tag safely
     results = list(exe.map(lambda t: list(ner.tag(t)), texts))
-```
+```text
 
 ---
 
@@ -436,7 +436,7 @@ ner = AhocorasickNER()
 ner.add_word("artist", "Metallica")
 ner.fit()
 list(ner.tag("Metallica"))
-```
+```text
 
 ### Inspect Internal State
 
@@ -449,13 +449,13 @@ print(f"Automaton: {ner.automaton}")
 
 # Check case sensitivity
 print(f"Case sensitive: {ner.case_sensitive}")
-```
+```text
 
 ### Run Tests
 
 ```bash
 uv run pytest test/unittests/ -v
-```
+```text
 
 If tests pass but your code fails, isolate the issue:
 
@@ -470,7 +470,7 @@ results = list(ner.tag("text"))
 assert len(results) == 1
 assert results[0]["word"] == "text"
 print("✓ Basic test passed")
-```
+```text
 
 ---
 

@@ -39,7 +39,7 @@ class NumpyAhocorasickNER:
         self._output: np.ndarray = np.empty(0, dtype=np.int32)
         self._output_counts: np.ndarray = np.empty(0, dtype=np.int32)
         self._char_to_id: np.ndarray = np.empty(0, dtype=np.int32)
-        self._label_strings: np.ndarray = np.empty(0, dtype=object)
+        self._label_strings: np.ndarray = np.empty(0, dtype=np.str_)
 
     def add_word(self, label: str, example: str) -> None:
         """Adds a labeled entity example to the automaton.
@@ -73,6 +73,13 @@ class NumpyAhocorasickNER:
         """
         if not self._fitted:
             self.fit()
+        # Convert label_strings to fixed-length string array for safe serialization
+        label_strings = self._label_strings
+        if label_strings.dtype == object:
+            # Find max length
+            max_len = max(len(s) for s in label_strings) if len(label_strings) > 0 else 0
+            label_strings = np.array(label_strings, dtype=f'U{max_len}')
+
         np.savez(
             path,
             goto=self._goto,
@@ -80,7 +87,7 @@ class NumpyAhocorasickNER:
             output=self._output,
             output_counts=self._output_counts,
             char_to_id=self._char_to_id,
-            label_strings=self._label_strings,
+            label_strings=label_strings,
             case_sensitive=np.array([self.case_sensitive]),
         )
 
@@ -90,7 +97,13 @@ class NumpyAhocorasickNER:
         Args:
             path: Source file path (with or without ``.npz`` extension).
         """
-        data = np.load(path if path.endswith(".npz") else path + ".npz", allow_pickle=True)
+        file_path = path if path.endswith(".npz") else path + ".npz"
+        # Try loading without pickle first (secure)
+        try:
+            data = np.load(file_path, allow_pickle=False)
+        except ValueError:
+            # Fall back to allow_pickle=True for backward compatibility with old files
+            data = np.load(file_path, allow_pickle=True)
         self._goto = data["goto"]
         self._failure = data["failure"]
         self._output = data["output"]

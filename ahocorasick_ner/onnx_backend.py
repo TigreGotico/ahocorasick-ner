@@ -168,7 +168,7 @@ class OnnxAhocorasickNER:
         self._output: np.ndarray = np.empty(0, dtype=np.int32)
         self._output_counts: np.ndarray = np.empty(0, dtype=np.int32)
         self._char_to_id: np.ndarray = np.empty(0, dtype=np.int32)
-        self._label_strings: np.ndarray = np.empty(0, dtype=object)
+        self._label_strings: np.ndarray = np.empty(0, dtype=np.str_)
 
     def add_word(self, label: str, example: str) -> None:
         """Adds a labeled entity example to the automaton.
@@ -227,12 +227,19 @@ class OnnxAhocorasickNER:
             onnx_path,
         )
         npz_path = path.replace(".onnx", "") + ".npz"
+        # Convert label_strings to fixed-length string array for safe serialization
+        label_strings = self._label_strings
+        if label_strings.dtype == object:
+            # Find max length
+            max_len = max(len(s) for s in label_strings) if len(label_strings) > 0 else 0
+            label_strings = np.array(label_strings, dtype=f'U{max_len}')
+
         np.savez(
             npz_path,
             output=self._output,
             output_counts=self._output_counts,
             char_to_id=self._char_to_id,
-            label_strings=self._label_strings,
+            label_strings=label_strings,
             case_sensitive=np.array([self.case_sensitive]),
         )
 
@@ -244,13 +251,20 @@ class OnnxAhocorasickNER:
         """
         base = path.replace(".onnx", "").replace(".npz", "")
         self._session = ort.InferenceSession(base + ".onnx")
-        data = np.load(base + ".npz", allow_pickle=True)
+        # Try loading without pickle first (secure)
+        try:
+            data = np.load(base + ".npz", allow_pickle=False)
+        except ValueError:
+            # Fall back to allow_pickle=True for backward compatibility with old files
+            data = np.load(base + ".npz", allow_pickle=True)
         self._output = data["output"]
         self._output_counts = data["output_counts"]
         self._char_to_id = data["char_to_id"]
         self._label_strings = data["label_strings"]
         if "case_sensitive" in data:
             self.case_sensitive = bool(data["case_sensitive"][0])
+        # Restore internal automaton state for consistency
+        self._inner.fit()
         self._fitted = True
 
     def _char_id(self, ch: str) -> int:

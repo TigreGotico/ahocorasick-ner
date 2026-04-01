@@ -37,7 +37,7 @@ for entity in entities:
 # 🎤 Artist: Metallica
 # 💿 Album: Master of Puppets
 # 🎤 Artist: Iron Maiden
-```
+```text
 
 ---
 
@@ -72,7 +72,7 @@ for desc in descriptions:
     entities = list(ner.tag(desc))
     for entity in entities:
         print(f"  [{entity['label']}] {entity['word']}")
-```
+```text
 
 ---
 
@@ -101,7 +101,7 @@ def is_safe(text):
 
 print("Test 1:", is_safe("Check out this amazing offer!"))
 print("Test 2:", is_safe("Click this link for a spam opportunity"))
-```
+```text
 
 ---
 
@@ -137,11 +137,11 @@ for doc_id, doc_text in enumerate(documents):
 
 # Export to CSV
 import csv
-with open("entities.csv", "w") as f:
+with open("entities.csv", "w", newline='') as f:
     writer = csv.DictWriter(f, fieldnames=["doc_id", "text", "entity", "label", "position"])
     writer.writeheader()
     writer.writerows(results)
-```
+```text
 
 ### Pattern: Parallel Processing
 
@@ -169,7 +169,7 @@ elapsed = time.time() - start
 
 print(f"Processed {len(documents)} docs in {elapsed:.2f}s")
 print(f"Found {sum(len(r) for r in all_results)} total entities")
-```
+```text
 
 ---
 
@@ -191,7 +191,7 @@ ner.fit()
 # Save to disk
 ner.save("large_vocabulary.ahocorasick")
 print("✅ Saved 100K entities")
-```
+```text
 
 ### Load and Use
 
@@ -206,7 +206,7 @@ ner.load("large_vocabulary.ahocorasick")
 for text in ["term_5000 is here", "term_9999 is there"]:
     entities = list(ner.tag(text))
     print(f"{text} -> {len(entities)} entities found")
-```
+```text
 
 ---
 
@@ -251,7 +251,7 @@ async def tag_text(request: TextInput) -> TagResponse:
 # curl -X POST http://localhost:8000/tag \
 #   -H "Content-Type: application/json" \
 #   -d '{"text": "Metallica rocks!", "min_word_len": 5}'
-```
+```text
 
 ---
 
@@ -289,11 +289,13 @@ documents = {
     "doc_002": "Iron Maiden's album The Number of the Beast",
 }
 
+from datetime import datetime
+
 for doc_id, text in documents.items():
     for entity in ner.tag(text):
         cursor.execute(
-            "INSERT INTO extracted_entities VALUES (NULL, ?, ?, ?, ?, ?, DEFAULT)",
-            (doc_id, entity["word"], entity["label"], entity["start"], entity["end"])
+            "INSERT INTO extracted_entities VALUES (NULL, ?, ?, ?, ?, ?, ?)",
+            (doc_id, entity["word"], entity["label"], entity["start"], entity["end"], datetime.now().isoformat())
         )
 
 db.commit()
@@ -304,7 +306,7 @@ for row in cursor.fetchall():
     print(row)
 
 db.close()
-```
+```text
 
 ---
 
@@ -360,7 +362,7 @@ dnr.remove_entity("band", "Metallica")
 print(dnr.tag("Metallica rocks"))  # No match now
 
 print(dnr.list_entities())
-```
+```text
 
 ---
 
@@ -400,7 +402,7 @@ normalized = normalize_text(raw)
 print(f"Raw: {raw}")
 print(f"Normalized: {normalized}")
 print(f"Entities: {list(ner.tag(normalized))}")
-```
+```text
 
 ---
 
@@ -446,7 +448,7 @@ with ThreadPoolExecutor(max_workers=4) as exe:
 time3 = time.time() - start
 
 print(f"Method 3 (parallel): {time3:.2f}s")
-```
+```text
 
 ---
 

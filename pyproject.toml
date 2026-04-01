@@ -42,7 +42,10 @@ datasets = [
 ]
 test = [
     "pytest",
-    "pytest-cov"
+    "pytest-cov",
+    "numpy",
+    "onnx",
+    "onnxruntime"
 ]
 
 [project.entry-points."opm.transformer.intent"]

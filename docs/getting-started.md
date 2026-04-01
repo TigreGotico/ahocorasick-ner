@@ -6,18 +6,18 @@
 
 ```bash
 uv pip install ahocorasick-ner
-```
+```text
 
 Or with pip:
 ```bash
 pip install ahocorasick-ner
-```
+```text
 
 ### Optional: NumPy Backend
 
 ```bash
 uv pip install ahocorasick-ner[numpy]
-```
+```text
 
 Pure-Python NER without C dependencies. Useful for environments where compiling extensions is difficult.
 
@@ -25,7 +25,7 @@ Pure-Python NER without C dependencies. Useful for environments where compiling 
 
 ```bash
 uv pip install ahocorasick-ner[onnx]
-```
+```text
 
 Export models to ONNX format for edge computing, WASM, and cross-platform deployment.
 
@@ -33,7 +33,7 @@ Export models to ONNX format for edge computing, WASM, and cross-platform deploy
 
 ```bash
 uv pip install ahocorasick-ner[datasets]
-```
+```text
 
 Load pre-built vocabularies from HuggingFace (Metal Archives, Music, IMDB).
 
@@ -41,7 +41,7 @@ Load pre-built vocabularies from HuggingFace (Metal Archives, Music, IMDB).
 
 ```bash
 uv pip install ahocorasick-ner[numpy,onnx,datasets]
-```
+```text
 
 ---
 
@@ -63,7 +63,7 @@ ner.add_word("album", "The Number of the Beast")
 
 # Finalize automaton
 ner.fit()
-```
+```text
 
 ### 2. Extract Entities
 
@@ -72,7 +72,7 @@ text = "I love Metallica's Master of Puppets and Iron Maiden's The Number of the
 
 for entity in ner.tag(text):
     print(entity)
-```
+```text
 
 Output:
 ```python
@@ -80,7 +80,7 @@ Output:
 {'start': 22, 'end': 40, 'word': 'Master of Puppets', 'label': 'album'}
 {'start': 46, 'end': 57, 'word': 'Iron Maiden', 'label': 'artist'}
 {'start': 62, 'end': 87, 'word': 'The Number of the Beast', 'label': 'album'}
-```
+```text
 
 ### 3. Case Sensitivity
 
@@ -93,7 +93,7 @@ ner.add_word("fruit", "apple")      # Different entity, exact case
 ner.fit()
 
 ner.tag("I use Apple computers and eat apples")
-```
+```text
 
 ### 4. Save and Load
 
@@ -107,7 +107,7 @@ ner2.load("music_ner.ahocorasick")
 
 # Ready to use immediately (no re-fitting needed)
 list(ner2.tag("Metallica is great"))
-```
+```text
 
 ---
 
@@ -125,7 +125,7 @@ ner.fit()
 
 results = list(ner.tag("Microsoft and Apple are tech giants"))
 print(results)
-```
+```text
 
 ### Pattern 2: Batch Processing
 
@@ -142,7 +142,7 @@ documents = [
 for doc in documents:
     for entity in ner.tag(doc):
         print(f"Doc: {doc[:30]}... | Entity: {entity['label']}")
-```
+```text
 
 ### Pattern 3: Entity Management
 
@@ -162,7 +162,7 @@ ner.fit()  # Re-finalize
 
 # Continue using
 entities = list(ner.tag("Black Sabbath is awesome"))
-```
+```text
 
 ---
 
@@ -175,7 +175,7 @@ entities = list(ner.tag("Black Sabbath is awesome"))
 ```python
 from ahocorasick_ner import AhocorasickNER
 ner = AhocorasickNER()
-```
+```text
 
 **Pros:**
 - ⭐⭐⭐⭐⭐ Fastest (C implementation)
@@ -193,7 +193,7 @@ ner = AhocorasickNER()
 ```python
 from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
 ner = NumpyAhocorasickNER()
-```
+```text
 
 **Pros:**
 - Pure Python (no C compilation)
@@ -212,7 +212,7 @@ ner = NumpyAhocorasickNER()
 from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
 ner = OnnxAhocorasickNER()
 ner.save("model")  # Creates model.onnx + model.npz
-```
+```text
 
 **Pros:**
 - ONNX standard format (widely supported)

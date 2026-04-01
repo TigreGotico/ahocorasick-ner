@@ -22,7 +22,7 @@ class MySkill(OVOSSkill):
         # Register entities for recognition
         self.register_entity("artist_name", ["Metallica", "Iron Maiden"])
         self.register_entity("album", ["Master of Puppets"])
-```
+```text
 
 ### 2. Plugin Listens
 
@@ -44,7 +44,7 @@ def handle_music_intent(self, message):
     entities = message.data.get("entities", [])
     for entity in entities:
         print(f"Matched: {entity['word']} ({entity['label']})")
-```
+```text
 
 ---
 
@@ -55,13 +55,13 @@ def handle_music_intent(self, message):
 ```bash
 # In your OVOS environment
 uv pip install ahocorasick-ner
-```
+```text
 
 The plugin is automatically discovered via entry point:
 ```toml
 [project.entry-points."opm.transformer.intent"]
 ovos-ahocorasick-ner-plugin = "ahocorasick_ner.opm:AhocorasickNERTransformer"
-```
+```text
 
 ### Enable in Config
 
@@ -75,7 +75,7 @@ Add to `~/.config/mycroft/mycroft.conf` or skill config:
     }
   }
 }
-```
+```text
 
 ---
 
@@ -142,19 +142,19 @@ class MusicSkill(OVOSSkill):
 
 def create_skill():
     return MusicSkill()
-```
+```text
 
 ### Corresponding Intent File
 
 File: `vocab/en-us/play.music.intent`
 
-```
+```text
 play [some] music [by] {artist_name}
 play {album}
 play music from {artist_name}
 i want to hear {artist_name}
 put on {album}
-```
+```text
 
 ---
 
@@ -177,7 +177,7 @@ self.register_entity(
     ["Metallica", "Iron Maiden"],
     blacklisted_words=["metal", "music"]
 )
-```
+```text
 
 ### register_vocab (alternative)
 
@@ -185,7 +185,7 @@ For non-entity intent matching:
 
 ```python
 self.register_vocab("Metallica")
-```
+```text
 
 ---
 
@@ -203,7 +203,7 @@ self.register_vocab("Metallica")
         "skill_id": "my-music-skill"
     }
 }
-```
+```text
 
 ### After NER Processing
 
@@ -231,7 +231,7 @@ self.register_vocab("Metallica")
         "skill_id": "my-music-skill"
     }
 }
-```
+```text
 
 ---
 
@@ -257,7 +257,7 @@ Add to your skill's `settingsmeta.json` or config section:
             "value": true
           },
           {
-            "name": "min_word_length",
+            "name": "min_word_len",
             "type": "number",
             "label": "Minimum word length (chars)",
             "value": 5
@@ -267,7 +267,7 @@ Add to your skill's `settingsmeta.json` or config section:
     ]
   }
 }
-```
+```text
 
 ### Global Config
 
@@ -285,7 +285,7 @@ Add to `mycroft.conf` to configure all NER-enabled skills:
     }
   }
 }
-```
+```text
 
 ---
 
@@ -298,7 +298,7 @@ from ovos_plugin_manager.templates.transformers import IntentTransformer
 
 transformers = IntentTransformer.get_available_plugins()
 print(transformers)  # Should include "ovos-ahocorasick-ner-plugin"
-```
+```text
 
 ### Log Entity Matches
 
@@ -311,7 +311,7 @@ def handle_play_music(self, message):
 
     for entity in entities:
         self.log.info(f"Entity: {entity['word']} ({entity['label']})")
-```
+```text
 
 ### Check Bus Messages
 
@@ -321,7 +321,7 @@ Monitor the OVOS bus:
 ovos-bus-client
 # In another terminal:
 # Your skill will emit messages, watch for "entities" in data
-```
+```text
 
 ---
 
@@ -337,7 +337,7 @@ self.register_entity("artist", ["Metallica", "Iron Maiden"])
 
 # ❌ DON'T: Register every possible word
 self.register_entity("word", ["the", "a", "is", ...])
-```
+```text
 
 ### 2. Use Meaningful Labels
 
@@ -351,7 +351,7 @@ self.register_entity("song_title", [...])
 # ❌ Bad: Generic labels
 self.register_entity("entity1", [...])
 self.register_entity("entity2", [...])
-```
+```text
 
 ### 3. Keep Vocabularies Up-to-Date
 
@@ -362,7 +362,7 @@ def on_skill_update(self):
     """Called when skill updates"""
     # Re-register with new entities
     self.register_entity("artist", self.get_artists())
-```
+```text
 
 ### 4. Fallback for Missing Entities
 
@@ -383,7 +383,7 @@ def handle_music_intent(self, message):
         artist = self.get_response("Which artist?")
         if artist:
             self.play_artist(artist)
-```
+```text
 
 ### 5. Test Entity Registration
 
@@ -401,7 +401,7 @@ def test_artist_entity_extraction(self):
     # Simulate transformer processing
     # Check that entities are populated
     assert msg.data.get("entities"), "No entities extracted"
-```
+```text
 
 ---
 
@@ -412,12 +412,12 @@ def test_artist_entity_extraction(self):
 1. **Check if plugin is loaded:**
    ```bash
    ovos-config show | grep ahocorasick
-   ```
+```text
 
 2. **Verify entities are registered:**
    ```python
    self.log.info(f"Registered entities: {self.entities}")
-   ```
+```text
 
 3. **Check utterance matches exactly:**
    - Whitespace and capitalization matter
@@ -439,7 +439,7 @@ If NER is slow:
     "backend": "numpy"  # Use NumPy instead of pyahocorasick
   }
 }
-```
+```text
 
 ---
 

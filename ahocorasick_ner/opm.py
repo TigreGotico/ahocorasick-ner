@@ -68,7 +68,7 @@ class AhocorasickNERTransformer(IntentTransformer):
             raise FileNotFoundError(f'Could not find file or samples for entity {name}')
             
         if not samples and file_name and isfile(file_name):
-            with open(file_name, 'r') as f:
+            with open(file_name, 'r', encoding='utf-8') as f:
                 samples = [line.strip() for line in f.readlines()]
 
         # expand templates
