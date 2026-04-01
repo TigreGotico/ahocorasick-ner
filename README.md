@@ -96,6 +96,25 @@ uv run python examples/benchmark.py
 
 ---
 
+## Testing
+
+Run all tests including NumPy and ONNX backend tests:
+
+```bash
+# Install with test dependencies
+uv pip install -e ".[test]"
+
+# Run tests
+uv run pytest test/unittests -v
+
+# Run with coverage
+uv run pytest test/unittests --cov=ahocorasick_ner --cov-report=term-missing
+```
+
+**Note:** Tests require `numpy`, `onnx`, and `onnxruntime`. These are included in the `test` extra.
+
+---
+
 ## License
 
 Apache 2.0 — free for commercial and non-commercial use.

@@ -45,7 +45,26 @@ test = [
     "pytest-cov",
     "numpy",
     "onnx",
-    "onnxruntime"
+    "onnxruntime",
+]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "numpy",
+    "onnx",
+    "onnxruntime",
+    "datasets",
+]
+all = [
+    "ovos-plugin-manager",
+    "ovos-utils",
+    "ovos-bus-client",
+    "numpy",
+    "onnx",
+    "onnxruntime",
+    "datasets",
+    "pytest",
+    "pytest-cov",
 ]
 
 [project.entry-points."opm.transformer.intent"]
@@ -59,3 +78,10 @@ include = ["ahocorasick_ner*"]
 
 [tool.setuptools.package-data]
 "*" = ["*.py", "*.ahocorasick"]
+
+[tool.pytest.ini_options]
+testpaths = ["test/unittests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
