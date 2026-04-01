@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.2.0a1) (2026-04-01)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.2a2...0.2.0a1)
+
+**Merged pull requests:**
+
+- feat: Add ONNX/NumPy backends, modernize packaging, and expand documentation [\#12](https://github.com/TigreGotico/ahocorasick-ner/pull/12) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.1.2a2](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.2a2) (2025-12-19)
 
 [Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.2a1...0.1.2a2)
