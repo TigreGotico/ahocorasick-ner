@@ -236,6 +236,8 @@ class OnnxAhocorasickNER:
 
         np.savez(
             npz_path,
+            goto=self._inner._goto,
+            failure=self._inner._failure,
             output=self._output,
             output_counts=self._output_counts,
             char_to_id=self._char_to_id,
@@ -263,8 +265,10 @@ class OnnxAhocorasickNER:
         self._label_strings = data["label_strings"]
         if "case_sensitive" in data:
             self.case_sensitive = bool(data["case_sensitive"][0])
-        # Restore internal automaton state for consistency
-        self._inner.fit()
+        # Restore _inner's transition tables so subsequent save() exports correctly
+        if "goto" in data:
+            self._inner._goto = data["goto"]
+            self._inner._failure = data["failure"]
         self._fitted = True
 
     def _char_id(self, ch: str) -> int:

@@ -261,7 +261,7 @@ else:
 # ✅ Rebuild if load fails
 try:
     ner.load("my_model.ahocorasick")
-except (EOFError, PickleError):
+except (EOFError, pickle.UnpicklingError):
     # Corrupted file, rebuild
     ner = AhocorasickNER()
     ner.add_word("artist", "Metallica")

@@ -9,7 +9,7 @@
 | **Dependencies** | `pyahocorasick`, `ovos-plugin-manager`, `ovos-utils`, `ovos-bus-client` |
 | **Supported Python** | 3.10+ |
 | **OPM Plugin** | `ovos-ahocorasick-ner-plugin` |
-| **License** | MIT |
+| **License** | Apache-2.0 |
 
 ## Key Methods
 

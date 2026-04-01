@@ -40,9 +40,9 @@ ner.fit()
 
 for entity in ner.tag("I flew from New York to London, then on to Japan."):
     print(entity)
-# {'start': 14, 'end': 21, 'word': 'New York', 'label': 'city'}
-# {'start': 26, 'end': 31, 'word': 'London', 'label': 'city'}
-# {'start': 44, 'end': 48, 'word': 'Japan', 'label': 'country'}
+# {'start': 12, 'end': 19, 'word': 'New York', 'label': 'city'}
+# {'start': 24, 'end': 29, 'word': 'London', 'label': 'city'}
+# {'start': 43, 'end': 47, 'word': 'Japan', 'label': 'country'}
 ```
 
 ---
