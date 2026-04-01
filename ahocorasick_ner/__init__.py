@@ -1,39 +1,52 @@
 import ahocorasick
 import pickle
 import re
-from typing import Dict, Iterable, List, Tuple, Set
+from typing import Dict, Iterable, List, Tuple, Set, Union
 
 
 class AhocorasickNER:
     """
-    A simple Named Entity Recognition system using the Aho-Corasick algorithm.
-    Supports matching pre-defined entities in a given string with word boundary filtering.
+    A fast, dictionary-based Named Entity Recognition (NER) system using the Aho-Corasick algorithm.
+    It supports simultaneous matching of multiple entities with word boundary awareness.
     """
 
     def __init__(self, case_sensitive: bool = False):
         """
-        Initialize the NER system.
+        Initializes the NER system.
 
         Args:
-            case_sensitive (bool): Whether matching should be case-sensitive. Defaults to False.
+            case_sensitive: bool, whether entity matching should be case-sensitive.
         """
-        self.automaton = ahocorasick.Automaton()
-        self.case_sensitive = case_sensitive
-        self._fitted = False
+        self.automaton: ahocorasick.Automaton = ahocorasick.Automaton()
+        self.case_sensitive: bool = case_sensitive
+        self._fitted: bool = False
 
-    def save(self, path: str):
+    def save(self, path: str) -> None:
+        """
+        Saves the underlying Aho-Corasick automaton to a file.
+
+        Args:
+            path: str, destination file path.
+        """
         self.automaton.save(path, pickle.dumps)
 
-    def load(self, path: str):
+    def load(self, path: str) -> None:
+        """
+        Loads an Aho-Corasick automaton from a file.
+
+        Args:
+            path: str, source file path.
+        """
         self.automaton = ahocorasick.load(path, pickle.loads)
+        self._fitted = True
 
     def add_word(self, label: str, example: str) -> None:
         """
-        Add a labeled word or phrase to the automaton.
+        Adds a labeled entity example to the automaton.
 
         Args:
-            label (str): The label to associate with the word (e.g., 'artist_name').
-            example (str): The word or phrase to match.
+            label: str, the entity label (e.g., 'artist_name').
+            example: str, the text to be recognized as this entity.
         """
         key = example if self.case_sensitive else example.lower()
         self.automaton.add_word(key, (label, key))
@@ -41,22 +54,23 @@ class AhocorasickNER:
 
     def fit(self) -> None:
         """
-        Finalize the automaton. This must be called after all words are added.
+        Finalizes the Aho-Corasick automaton. Must be called before tagging if new words were added.
         """
         if not self._fitted:
             self.automaton.make_automaton()
         self._fitted = True
 
-    def tag(self, haystack: str, min_word_len: int = 5) -> Iterable[Dict[str, str]]:
+    def tag(self, haystack: str, min_word_len: int = 5) -> Iterable[Dict[str, Union[int, str]]]:
         """
-        Search for labeled entities in the given string.
+        Searches for registered entities in the input text.
+        Implements greedy longest-match-first strategy and respects word boundaries.
 
         Args:
-            haystack (str): The input string to search.
-            min_word_len (int): Minimum word length to consider a match. Defaults to 5.
+            haystack: str, the text to search.
+            min_word_len: int, minimum length of a match to be considered valid.
 
         Yields:
-            Dict[str, str]: A dictionary with keys 'start', 'end', 'word', and 'label'.
+            Dict[str, Union[int, str]]: Dictionary with 'start', 'end', 'word', and 'label'.
         """
         if not self._fitted:
             self.fit()
