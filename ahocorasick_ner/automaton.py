@@ -5,9 +5,9 @@ for use by the numpy and ONNX inference backends.
 """
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
-import numpy as np
+# numpy is imported lazily in to_tables() so this module can be used without numpy installed
 
 
 @dataclass
@@ -102,7 +102,7 @@ class AhocorasickAutomaton:
 
         self._built = True
 
-    def to_tables(self) -> Dict[str, np.ndarray]:
+    def to_tables(self) -> "Dict[str, Any]":
         """Exports the automaton as flat numpy arrays.
 
         Returns:
@@ -114,6 +114,8 @@ class AhocorasickAutomaton:
             - ``char_to_id``: int32 array ``[max_ord + 1]`` — character ordinal to char_id mapping
             - ``label_strings``: object array of label strings (for decoding label_ids)
         """
+        import numpy as np  # lazy import — numpy is optional for core functionality
+
         if not self._built:
             self.build()
 

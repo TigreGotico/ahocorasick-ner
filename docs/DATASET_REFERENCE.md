@@ -123,9 +123,8 @@ upbeat = SpotifyTracksNER(energy_min=0.8, valence_min=0.7)
 # Only explicit-free tracks
 clean = SpotifyTracksNER(explicit=False)
 
-# Acoustic instrumental tracks
-acoustic = SpotifyTracksNER(acousticness_min=0.8,
-                             instrumentalness_min=0.5)
+# Acoustic tracks
+acoustic = SpotifyTracksNER(acousticness_min=0.8)
 ```
 
 ---

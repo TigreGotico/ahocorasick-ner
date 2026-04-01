@@ -47,15 +47,15 @@ def example_metal_bands_by_multiple_filters():
 
     print("\nPortuguese bands found:")
     for entity in pt_bands.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
     print("\nSwedish black metal bands found:")
     for entity in se_black.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
     print("\nThrash metal bands (1980-1995) found:")
     for entity in thrash80s.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
 
 def example_spotify_by_audio_features():
@@ -93,11 +93,11 @@ def example_spotify_by_audio_features():
 
     print("\nRock tracks found:")
     for entity in rock_tracks.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
     print("\nDanceable tracks found:")
     for entity in dance.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
 
 def example_generic_filtering():
@@ -129,7 +129,7 @@ def example_generic_filtering():
 
     print("\nBrazilian bands found:")
     for entity in brazil_bands.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
 
 def example_movie_actors_by_gender():
@@ -149,11 +149,11 @@ def example_movie_actors_by_gender():
 
     print("\nFemale actors found:")
     for entity in actresses.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
     print("\nMale actors found:")
     for entity in actors.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
 
 def example_recipes_and_food_products():
@@ -181,15 +181,15 @@ def example_recipes_and_food_products():
 
     print("\nRecipe ingredients (from Gathered) found:")
     for entity in gathered_recipes.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
     print("\nVegan products found:")
     for entity in vegan_products.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
     print("\nGluten-free products found:")
     for entity in gluten_free.tag(text):
-        print(f"  - {entity.value}")
+        print(f"  - {entity['word']}")
 
 
 def example_filtering_benefits():

@@ -378,7 +378,8 @@ class MetalArchivesTrackNER(AhocorasickNER):
             if self.album_type and entry.get("album_type") != self.album_type:
                 continue
 
-            self.add_word("metal_band", entry.get("band_name", ""))
+            if entry.get("band_name"):
+                self.add_word("metal_band", entry["band_name"])
             if entry.get("track_name"):
                 self.add_word("metal_track", entry["track_name"])
                 count += 1
@@ -925,13 +926,13 @@ class FoodProductsNER(AhocorasickNER):
                     continue
 
             # Check dietary filters
-            if self.vegan or self.vegetarian or self.organic:
-                labels_tags = row.get("labels_tags", [])
-                if self.vegan and "vegan" not in labels_tags:
+            if any(flag is not None for flag in (self.vegan, self.vegetarian, self.organic)):
+                labels_tags = row.get("labels_tags") or []
+                if self.vegan is not None and ("vegan" in labels_tags) != self.vegan:
                     continue
-                if self.vegetarian and "vegetarian" not in labels_tags:
+                if self.vegetarian is not None and ("vegetarian" in labels_tags) != self.vegetarian:
                     continue
-                if self.organic and "organic" not in labels_tags:
+                if self.organic is not None and ("organic" in labels_tags) != self.organic:
                     continue
 
             # Check country filter
@@ -957,12 +958,12 @@ class FoodProductsNER(AhocorasickNER):
         filters = []
         if self.allergen:
             filters.append(f"{self.allergen}")
-        if self.vegan:
-            filters.append("vegan")
-        if self.vegetarian:
-            filters.append("vegetarian")
-        if self.organic:
-            filters.append("organic")
+        if self.vegan is not None:
+            filters.append(f"vegan={self.vegan}")
+        if self.vegetarian is not None:
+            filters.append(f"vegetarian={self.vegetarian}")
+        if self.organic is not None:
+            filters.append(f"organic={self.organic}")
         if self.country:
             filters.append(f"country={self.country}")
 
