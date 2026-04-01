@@ -1,12 +1,36 @@
 # Changelog
 
-## [0.1.1a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.1a1) (2025-06-10)
+## [0.3.0a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.0a1) (2026-04-01)
 
-[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.0...0.1.1a1)
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.2.0a1...0.3.0a1)
 
 **Merged pull requests:**
 
-- fix: typing [\#3](https://github.com/TigreGotico/ahocorasick-ner/pull/3) ([JarbasAl](https://github.com/JarbasAl))
+- feat: add advanced filtering to dataset loaders [\#13](https://github.com/TigreGotico/ahocorasick-ner/pull/13) ([JarbasAl](https://github.com/JarbasAl))
+
+## [0.2.0a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.2.0a1) (2026-04-01)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.2a2...0.2.0a1)
+
+**Merged pull requests:**
+
+- feat: Add ONNX/NumPy backends, modernize packaging, and expand documentation [\#12](https://github.com/TigreGotico/ahocorasick-ner/pull/12) ([JarbasAl](https://github.com/JarbasAl))
+
+## [0.1.2a2](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.2a2) (2025-12-19)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.2a1...0.1.2a2)
+
+**Merged pull requests:**
+
+- chore\(deps\): update actions/setup-python action to v6 [\#10](https://github.com/TigreGotico/ahocorasick-ner/pull/10) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [0.1.2a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.2a1) (2025-12-18)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.1...0.1.2a1)
+
+**Merged pull requests:**
+
+- chore: Configure Renovate [\#5](https://github.com/TigreGotico/ahocorasick-ner/pull/5) ([renovate[bot]](https://github.com/apps/renovate))
 
 
 

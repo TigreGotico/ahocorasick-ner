@@ -1,0 +1,87 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ahocorasick-ner"
+dynamic = ["version"]
+description = "A fast, dictionary-based Named Entity Recognition system using the Aho-Corasick algorithm."
+readme = "README.md"
+authors = [
+    { name = "JarbasAI", email = "jarbasai@mailfence.com" }
+]
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+dependencies = [
+    "pyahocorasick"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Text Processing :: Linguistic",
+    "Intended Audience :: Developers",
+]
+
+[project.optional-dependencies]
+opm = [
+    "ovos-plugin-manager",
+    "ovos-utils",
+    "ovos-bus-client"
+]
+numpy = [
+    "numpy",
+]
+onnx = [
+    "numpy",
+    "onnx",
+    "onnxruntime",
+]
+datasets = [
+    "datasets"
+]
+test = [
+    "pytest",
+    "pytest-cov",
+    "numpy",
+    "onnx",
+    "onnxruntime",
+]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "numpy",
+    "onnx",
+    "onnxruntime",
+    "datasets",
+]
+all = [
+    "ovos-plugin-manager",
+    "ovos-utils",
+    "ovos-bus-client",
+    "numpy",
+    "onnx",
+    "onnxruntime",
+    "datasets",
+    "pytest",
+    "pytest-cov",
+]
+
+[project.entry-points."opm.transformer.intent"]
+ovos-ahocorasick-ner-plugin = "ahocorasick_ner.opm:AhocorasickNERTransformer"
+
+[tool.setuptools.dynamic]
+version = { attr = "ahocorasick_ner.version.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["ahocorasick_ner*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.py", "*.ahocorasick"]
+
+[tool.pytest.ini_options]
+testpaths = ["test/unittests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
