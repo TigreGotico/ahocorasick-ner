@@ -148,12 +148,15 @@ list(ner.tag("my-foo-bar"))  # [match] — hyphen doesn't block it
 ```text
 
 **Customize via min_word_len:**
+
+`min_word_len` controls the minimum match *length*; word-boundary checks always run regardless of this value.
+
 ```python
-# Skip word boundary check by reducing min_word_len
+# Allow short matches by reducing min_word_len (boundary checks still apply)
 ner.add_word("word", "a")  # 1 character
 ner.fit()
 
-list(ner.tag("a apple", min_word_len=1))  # Both "a"s match (no length filter)
+list(ner.tag("a apple", min_word_len=1))  # "a" at position 0 matches (length >= 1, has boundaries)
 ```text
 
 ---

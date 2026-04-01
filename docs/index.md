@@ -15,6 +15,7 @@ This library excels at extracting known entities from text with zero machine lea
 - **[Examples](examples.md)** — Real-world usage patterns
 - **[Integration](integration.md)** — OpenVoiceOS plugin setup
 - **[Datasets](datasets.md)** — Using pre-built entity loaders (Metal, Music, IMDB)
+- **[Dataset Reference](DATASET_REFERENCE.md)** — Complete entity catalog (1.5B+ entities, 30+ languages) — **NEW!**
 - **[Performance](performance.md)** — Benchmarks, profiling, optimization
 - **[Troubleshooting](troubleshooting.md)** — Common issues and solutions
 
