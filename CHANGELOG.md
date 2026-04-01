@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.0a1) (2026-04-01)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.2.0a1...0.3.0a1)
+
+**Merged pull requests:**
+
+- feat: add advanced filtering to dataset loaders [\#13](https://github.com/TigreGotico/ahocorasick-ner/pull/13) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.2.0a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.2.0a1) (2026-04-01)
 
 [Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.2a2...0.2.0a1)
