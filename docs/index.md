@@ -2,22 +2,22 @@
 
 **Fast, dictionary-based Named Entity Recognition using the Aho-Corasick algorithm.**
 
-This library excels at extracting known entities from text with zero machine learning overhead. Perfect for rule-based systems, knowledge graphs, and high-performance pipelines.
+This library extracts known entities from text with no machine learning overhead. Use it for rule-based systems, knowledge graphs, and high-throughput pipelines.
 
 ---
 
 ## Quick Links
 
-- **[Getting Started](getting-started.md)** — Installation and 5-minute quickstart
-- **[API Reference](api-reference.md)** — Complete method signatures and usage
-- **[Backends](backends.md)** — Pyahocorasick, NumPy, ONNX comparison
-- **[Algorithms](algorithms.md)** — How Aho-Corasick works, word boundaries, overlap resolution
-- **[Examples](examples.md)** — Real-world usage patterns
-- **[Integration](integration.md)** — OpenVoiceOS plugin setup
-- **[Datasets](datasets.md)** — Using pre-built entity loaders (Metal, Music, IMDB)
-- **[Dataset Reference](DATASET_REFERENCE.md)** — Complete entity catalog (1.5B+ entities, 30+ languages) — **NEW!**
-- **[Performance](performance.md)** — Benchmarks, profiling, optimization
-- **[Troubleshooting](troubleshooting.md)** — Common issues and solutions
+- **[Getting Started](getting-started.md)**: Installation and 5-minute quickstart
+- **[API Reference](api-reference.md)**: Complete method signatures and usage
+- **[Backends](backends.md)**: Pyahocorasick, NumPy, ONNX comparison
+- **[Algorithms](algorithms.md)**: How Aho-Corasick works, word boundaries, overlap resolution
+- **[Examples](examples.md)**: Real-world usage patterns
+- **[Integration](integration.md)**: OpenVoiceOS plugin setup
+- **[Datasets](datasets.md)**: Using pre-built entity loaders (Metal, Music, IMDB)
+- **[Dataset Reference](DATASET_REFERENCE.md)**: complete entity catalog (1.5B+ entities, 30+ languages)
+- **[Performance](performance.md)**: Benchmarks, profiling, optimization
+- **[Troubleshooting](troubleshooting.md)**: Common issues and solutions
 
 ---
 
@@ -27,22 +27,22 @@ The Aho-Corasick algorithm is a finite state machine for multi-pattern string ma
 
 | Property | Value |
 |----------|-------|
-| **Fit time** | O(m) — m = sum of entity lengths |
-| **Match time** | O(n + z) — n = text length, z = matches |
+| **Fit time** | O(m): m = sum of entity lengths |
+| **Match time** | O(n + z): n = text length, z = matches |
 | **Setup** | Instant (no training, no ML) |
 | **Vocab size** | 1K–1M+ entities |
 | **Accuracy** | 100% for exact matches |
 
 **When to use:**
-- ✅ Large, well-defined vocabularies
-- ✅ Exact matching with clear labels
-- ✅ Low latency required
-- ✅ Explainability matters (no black box)
+- Large, well-defined vocabularies
+- Exact matching with clear labels
+- Low latency required
+- Explainability matters (no black box)
 
 **When NOT to use:**
-- ❌ Need fuzzy/typo tolerance → use `rapidfuzz`
-- ❌ Morphological variation (plurals, tenses) → use NLP models
-- ❌ Context-dependent meanings → use transformers
+- Need fuzzy/typo tolerance → use `rapidfuzz`
+- Morphological variation (plurals, tenses) → use NLP models
+- Context-dependent meanings → use transformers
 
 ---
 
@@ -74,7 +74,6 @@ ner.add_word("entity", "abc")
 ner.add_word("entity", "bcd")
 ner.add_word("entity", "bcde")
 ner.fit()
-
 # In text "abcde":
 # Candidates: "abc", "bcd", "bcde"
 # Selected: "bcde" (longest; blocks overlapping matches)
@@ -86,11 +85,11 @@ ner.fit()
 
 | Backend | Use Case | Speed | Dependencies |
 |---------|----------|-------|--------------|
-| **pyahocorasick** | Production (default) | ⭐⭐⭐⭐⭐ Fastest | C extension (compiles native) |
-| **NumPy** | Portable | ⭐⭐⭐⭐ | Pure Python, requires numpy |
-| **ONNX** | Edge/WASM | ⭐⭐⭐⭐ | onnxruntime (cross-platform) |
+| **pyahocorasick** | Production (default) | Fastest | C extension (compiles native) |
+| **NumPy** | Portable | Fast | Pure Python, requires numpy |
+| **ONNX** | Edge/WASM | Fast | onnxruntime (cross-platform) |
 
-All three share the same API — switch backends without code changes:
+All three share the same API: switch backends without code changes:
 
 ```python
 from ahocorasick_ner import AhocorasickNER          # pyahocorasick
@@ -108,15 +107,12 @@ Load curated entity vocabularies from HuggingFace:
 
 ```python
 from ahocorasick_ner.datasets import EncyclopediaMetallvmNER, MusicNER, ImdbNER
-
-# Metal Archives (bands, tracks, albums — ~15K entities)
+# Metal Archives (bands, tracks, albums: ~15K entities)
 metal_ner = EncyclopediaMetallvmNER()
 metal_ner.tag("Metallica played Master of Puppets")
-
-# Multi-genre music (classical, jazz, prog, trance, metal — ~50K)
+# Multi-genre music (classical, jazz, prog, trance, metal: ~50K)
 music_ner = MusicNER()
-
-# IMDB (actors, directors, writers, composers — ~20K)
+# IMDB (actors, directors, writers, composers: ~20K)
 imdb_ner = ImdbNER()
 ```
 
@@ -131,9 +127,8 @@ Automatically register entities and perform NER on OVOS utterances:
 ```python
 # In your skill:
 self.register_entity("artist_name", ["Metallica", "Iron Maiden"])
-
 # OVOS Transformer plugin listens for registration and injects matches
-# into the intent match context — available in your intent handler
+# into the intent match context: available in your intent handler
 ```
 
 See **[Integration](integration.md)** for setup and examples.
@@ -163,7 +158,7 @@ See **[Performance](performance.md)** for benchmarks and profiling.
 
 ## License
 
-Apache 2.0 — free for commercial and non-commercial use.
+Apache 2.0: free for commercial and non-commercial use.
 
 ---
 

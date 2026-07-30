@@ -13,7 +13,7 @@ CPU: Intel Core i7-9700K @ 3.6 GHz
 RAM: 32 GB
 Python: 3.11
 Backend: pyahocorasick (C-based)
-```text
+```
 
 ### Fit Time
 
@@ -28,14 +28,13 @@ Entities | Time (ms) | RAM (MB)
 10K      | 50        | 15
 50K      | 300       | 80
 100K     | 600       | 160
-```text
+```
 
 **Complexity:** O(m) where m = sum of entity lengths
 
 ```python
 import time
 from ahocorasick_ner import AhocorasickNER
-
 for count in [100, 1000, 5000, 10000]:
     ner = AhocorasickNER()
     start = time.time()
@@ -44,7 +43,7 @@ for count in [100, 1000, 5000, 10000]:
     ner.fit()
     elapsed = time.time() - start
     print(f"{count} entities: {elapsed*1000:.1f}ms")
-```text
+```
 
 ### Tag Time
 
@@ -58,29 +57,25 @@ Text Length | 100 chars | 1K chars | 10K chars | 100K chars
 10K        | 3ms       | 8ms      | 80ms      | 800ms
 50K        | 5ms       | 20ms     | 200ms     | 2000ms
 100K       | 10ms      | 40ms     | 400ms     | 4000ms
-```text
+```
 
 **Complexity:** O(n + z) where n = text length, z = matches
 
 ```python
 import time
 from ahocorasick_ner import AhocorasickNER
-
 ner = AhocorasickNER()
 for i in range(10000):
     ner.add_word("entity", f"term_{i}")
 ner.fit()
-
 text = "term_5000 is interesting " * 100  # ~2500 chars
-
 start = time.time()
 for _ in range(1000):
     list(ner.tag(text))
 elapsed = time.time() - start
-
 print(f"1000 iterations: {elapsed:.2f}s ({1/elapsed:.0f} tags/sec)")
 # ~0.15s (6667 tags/sec)
-```text
+```
 
 ### Save/Load Time
 
@@ -94,30 +89,26 @@ Entities | Save (ms) | Load (ms)
 10K      | 10        | 15
 50K      | 50        | 60
 100K     | 100       | 120
-```text
+```
 
 ```python
 import time
 from ahocorasick_ner import AhocorasickNER
-
 ner = AhocorasickNER()
 for i in range(10000):
     ner.add_word("entity", f"term_{i}")
 ner.fit()
-
 # Save
 start = time.time()
 ner.save("model.ahocorasick")
 save_time = time.time() - start
-
 # Load
 start = time.time()
 ner2 = AhocorasickNER()
 ner2.load("model.ahocorasick")
 load_time = time.time() - start
-
 print(f"Save: {save_time*1000:.1f}ms, Load: {load_time*1000:.1f}ms")
-```text
+```
 
 ---
 
@@ -131,7 +122,7 @@ Backend     | Speed      | Relative
 pyahocorasick | 0.15s    | 1.0x (baseline)
 NumPy       | 0.35s      | 2.3x slower
 ONNX        | 0.40s      | 2.7x slower
-```text
+```
 
 ### Memory (Loaded Model)
 
@@ -141,7 +132,7 @@ Backend     | Memory
 pyahocorasick | 15 MB
 NumPy       | 25 MB
 ONNX        | 30 MB (includes .onnx file)
-```text
+```
 
 ### Installation Size
 
@@ -151,7 +142,7 @@ Backend     | Size
 pyahocorasick | 0.5 MB (binary)
 NumPy       | 20 MB
 ONNX        | ~10 MB (onnx) + ~50 MB (onnxruntime)
-```text
+```
 
 ---
 
@@ -163,21 +154,18 @@ ONNX        | ~10 MB (onnx) + ~50 MB (onnxruntime)
 import cProfile
 import pstats
 from ahocorasick_ner import AhocorasickNER
-
 ner = AhocorasickNER()
 for i in range(1000):
     ner.add_word("entity", f"term_{i}")
-
 # Profile fit
 profiler = cProfile.Profile()
 profiler.enable()
 ner.fit()
 profiler.disable()
-
 stats = pstats.Stats(profiler)
 stats.sort_stats("cumulative")
 stats.print_stats(10)
-```text
+```
 
 Output:
 ```text
@@ -185,14 +173,13 @@ ncalls  tottime  cumtime   filename:lineno(function)
      1    0.001    0.020   __init__.py:55(fit)
      1    0.019    0.019   {pyahocorasick.make_automaton}
   2000    0.000    0.000   {built-in append}
-```text
+```
 
 ### Memory Profiling
 
 ```python
 from memory_profiler import profile
 from ahocorasick_ner import AhocorasickNER
-
 @profile
 def train_ner():
     ner = AhocorasickNER()
@@ -200,14 +187,13 @@ def train_ner():
         ner.add_word("entity", f"term_{i}")
     ner.fit()
     return ner
-
 train_ner()
-```text
+```
 
 Run:
 ```bash
 python -m memory_profiler script.py
-```text
+```
 
 Output shows line-by-line memory usage.
 
@@ -222,19 +208,18 @@ Output shows line-by-line memory usage.
 **Solution:** Remove unnecessary entities
 
 ```python
-# ❌ Slow: 100K unrelated terms
+# Slow: 100K unrelated terms
 ner = AhocorasickNER()
 for i in range(100000):
     ner.add_word("entity", f"word_{i}")
 ner.fit()  # ~600ms, 160MB
-
-# ✅ Fast: Only relevant entities
+# Fast: Only relevant entities
 ner = AhocorasickNER()
 relevant_entities = [...] # 5K entities
 for entity in relevant_entities:
     ner.add_word("entity", entity)
 ner.fit()  # ~20ms, 8MB
-```text
+```
 
 ### 2. Increase min_word_len
 
@@ -243,12 +228,11 @@ ner.fit()  # ~20ms, 8MB
 **Solution:** Filter short entities
 
 ```python
-# ❌ Slow: Match everything including 1-char words
+# Slow: Match everything including 1-char words
 ner.tag(text, min_word_len=1)  # 100ms for 10K chars
-
-# ✅ Fast: Only match words >= 4 chars
+# Fast: Only match words >= 4 chars
 ner.tag(text, min_word_len=4)  # 30ms for 10K chars
-```text
+```
 
 ### 3. Cache NER Models
 
@@ -257,21 +241,19 @@ ner.tag(text, min_word_len=4)  # 30ms for 10K chars
 **Solution:** Load pre-trained models
 
 ```python
-# ❌ Slow: Re-train every time
+# Slow: Re-train every time
 def process_text(text):
     ner = AhocorasickNER()  # Build from scratch
     for entity in my_entities:
         ner.add_word("entity", entity)
     ner.fit()  # 50ms
     return list(ner.tag(text))
-
-# ✅ Fast: Load once, reuse
+# Fast: Load once, reuse
 ner = AhocorasickNER()  # Load once at startup
 ner.load("prebuilt_model.ahocorasick")
-
 def process_text(text):
     return list(ner.tag(text))  # <5ms per document
-```text
+```
 
 ### 4. Use Appropriate Backend
 
@@ -283,15 +265,13 @@ def process_text(text):
 # If performance critical: pyahocorasick
 from ahocorasick_ner import AhocorasickNER
 ner = AhocorasickNER()
-
 # If must run in browsers/edge: ONNX
 from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
 ner = OnnxAhocorasickNER()
-
 # If no C compiler available: NumPy
 from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
 ner = NumpyAhocorasickNER()
-```text
+```
 
 ### 5. Batch Processing
 
@@ -300,14 +280,13 @@ ner = NumpyAhocorasickNER()
 **Solution:** Use generator or parallel processing
 
 ```python
-# ❌ Slow: Sequential
+# Slow: Sequential
 results = [list(ner.tag(doc)) for doc in documents]
-
-# ✅ Fast: Parallel
+# Fast: Parallel
 from concurrent.futures import ThreadPoolExecutor
 with ThreadPoolExecutor(max_workers=4) as exe:
     results = list(exe.map(lambda doc: list(ner.tag(doc)), documents))
-```text
+```
 
 ### 6. Pre-compile Regular Expressions
 
@@ -328,56 +307,45 @@ with ThreadPoolExecutor(max_workers=4) as exe:
 
 ```python
 from ahocorasick_ner import AhocorasickNER
-
 # Strategy 1: Split into categories
 ner_artists = AhocorasickNER()
 ner_albums = AhocorasickNER()
-
 for artist in artists:
     ner_artists.add_word("artist", artist)
 ner_artists.fit()
-
 for album in albums:
     ner_albums.add_word("album", album)
 ner_albums.fit()
-
 # Tag with appropriate NER
 text = "Metallica plays Master of Puppets"
 artists = list(ner_artists.tag(text))
 albums = list(ner_albums.tag(text))
-
 # Advantage: Smaller models, faster tagging
-
 # Strategy 2: Use prefix/suffix indexing
 ner = AhocorasickNER()
 # Only add entities starting with "A", "B", "C" (rotate by character)
 # Require first character matches before tagging
-```text
+```
 
 ### For Real-time Systems (<10ms latency required)
 
 ```python
 # Strategy 1: Pre-filter text
 import re
-
 ner = AhocorasickNER()
 ner.load("prebuilt_model.ahocorasick")
-
 def fast_tag(text):
     # Only tag if contains likely matches (first letter check)
     if not re.search(r'[A-Z]', text):  # Capitalized word
         return []
-
     # Tag now that we filtered
     return list(ner.tag(text, min_word_len=4))
-
 # Strategy 2: Cache results
 from functools import lru_cache
-
 @lru_cache(maxsize=10000)
 def tag_cached(text):
     return tuple(ner.tag(text))
-```text
+```
 
 ---
 
@@ -410,6 +378,9 @@ def tag_cached(text):
 
 ## See Also
 
-- **[Backends](backends.md)** — Performance comparison of backends
-- **[Algorithms](algorithms.md)** — Complexity analysis
-- **[Examples](examples.md)** — Batch processing patterns
+- **[Backends](backends.md)**: Performance comparison of backends
+- **[Algorithms](algorithms.md)**: Complexity analysis
+- **[Examples](examples.md)**: Batch processing patterns
+
+---
+[← Dataset Reference](DATASET_REFERENCE.md) · [Home](index.md) · [Troubleshooting →](troubleshooting.md)
