@@ -13,8 +13,7 @@ _mock_modules = {
     "ovos_plugin_manager.templates.pipeline": MagicMock(),
     "ovos_plugin_manager.templates.transformers": MagicMock(),
     "ovos_utils": MagicMock(),
-    "ovos_utils.bracket_expansion": MagicMock(),
-    "ovos_utils.lang": MagicMock(),
+    "ovos_spec_tools": MagicMock(),
     "ovos_utils.list_utils": MagicMock(),
     "ovos_utils.log": MagicMock(),
 }
@@ -72,8 +71,8 @@ class TestAhocorasickNERTransformer(unittest.TestCase):
         mock_sess = MagicMock()
         mock_sess.lang = "en-us"
         opm_mod.SessionManager.get.return_value = mock_sess
-        opm_mod.standardize_lang_tag = lambda x: x
-        opm_mod.expand_template = lambda x: [x]
+        opm_mod.standardize_lang = lambda x: x
+        opm_mod.expand = lambda x: [x]
         opm_mod.deduplicate_list = lambda x: list(set(x))
         opm_mod.flatten_list = lambda x: [item for sub in x for item in sub]
 
@@ -107,8 +106,8 @@ class TestAhocorasickNERTransformer(unittest.TestCase):
         mock_sess = MagicMock()
         mock_sess.lang = "en-us"
         opm_mod.SessionManager.get.return_value = mock_sess
-        opm_mod.standardize_lang_tag = lambda x: x
-        opm_mod.expand_template = lambda x: [x]
+        opm_mod.standardize_lang = lambda x: x
+        opm_mod.expand = lambda x: [x]
         opm_mod.deduplicate_list = lambda x: x
         opm_mod.flatten_list = lambda x: x
 
@@ -133,8 +132,8 @@ class TestAhocorasickNERTransformer(unittest.TestCase):
         mock_sess = MagicMock()
         mock_sess.lang = "en-us"
         opm_mod.SessionManager.get.return_value = mock_sess
-        opm_mod.standardize_lang_tag = lambda x: x
-        opm_mod.expand_template = lambda x: [x]
+        opm_mod.standardize_lang = lambda x: x
+        opm_mod.expand = lambda x: [x]
         opm_mod.deduplicate_list = lambda x: x
         opm_mod.flatten_list = lambda x: [item for sub in x for item in sub]
 
@@ -167,8 +166,8 @@ class TestAhocorasickNERTransformer(unittest.TestCase):
             mock_sess = MagicMock()
             mock_sess.lang = "en-us"
             opm_mod.SessionManager.get.return_value = mock_sess
-            opm_mod.standardize_lang_tag = lambda x: x
-            opm_mod.expand_template = lambda x: [x]
+            opm_mod.standardize_lang = lambda x: x
+            opm_mod.expand = lambda x: [x]
             opm_mod.deduplicate_list = lambda x: list(dict.fromkeys(x))
             opm_mod.flatten_list = lambda x: [item for sub in x for item in sub]
             opm_mod.isfile = os.path.isfile
