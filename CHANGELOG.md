@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.2a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.2a1) (2026-09-18)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.1a1...0.3.2a1)
+
+**Merged pull requests:**
+
+- fix: import expand and standardize\_lang from ovos-spec-tools [\#20](https://github.com/TigreGotico/ahocorasick-ner/pull/20) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [0.3.1a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.1a1) (2026-07-30)
 
 [Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.0...0.3.1a1)
