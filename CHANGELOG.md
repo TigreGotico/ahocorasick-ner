@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.2a2](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.2a2) (2026-09-19)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.2a1...0.3.2a2)
+
+**Merged pull requests:**
+
+- ci: publish the alpha through the shared workflow, no setup.py [\#22](https://github.com/TigreGotico/ahocorasick-ner/pull/22) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [0.3.2a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.2a1) (2026-09-18)
 
 [Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.1a1...0.3.2a1)
