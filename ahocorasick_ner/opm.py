@@ -5,8 +5,7 @@ from ovos_bus_client.message import Message
 from ovos_bus_client.session import SessionManager
 from ovos_plugin_manager.templates.pipeline import IntentHandlerMatch
 from ovos_plugin_manager.templates.transformers import IntentTransformer
-from ovos_utils.bracket_expansion import expand_template
-from ovos_utils.lang import standardize_lang_tag
+from ovos_spec_tools import expand, standardize_lang
 from ovos_utils.list_utils import deduplicate_list, flatten_list
 from ovos_utils.log import LOG
 
@@ -56,7 +55,7 @@ class AhocorasickNERTransformer(IntentTransformer):
         if not skill_id:
             skill_id = "anonymous_skill"
         lang = message.data.get('lang') or sess.lang
-        lang = standardize_lang_tag(lang)
+        lang = standardize_lang(lang)
 
         # intent specific
         file_name = message.data.get('file_name')
@@ -73,7 +72,7 @@ class AhocorasickNERTransformer(IntentTransformer):
 
         # expand templates
         if samples:
-            samples = deduplicate_list(flatten_list([expand_template(s) for s in samples]))
+            samples = deduplicate_list(flatten_list([expand(s) for s in samples]))
         else:
             samples = []
 
