@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.2a4](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.2a4) (2026-09-27)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.2a3...0.3.2a4)
+
+**Merged pull requests:**
+
+- Update actions/setup-python action to v7 [\#17](https://github.com/TigreGotico/ahocorasick-ner/pull/17) ([renovate[bot]](https://github.com/apps/renovate))
+
 ## [0.3.2a3](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.2a3) (2026-09-26)
 
 [Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.2a2...0.3.2a3)
