@@ -8,9 +8,9 @@ Three implementations of the Aho-Corasick algorithm, all sharing the same API.
 
 | Backend | API | Speed | Dependencies | Portability | Use Case |
 |---------|-----|-------|--------------|-------------|----------|
-| **pyahocorasick** | `AhocorasickNER` | ⭐⭐⭐⭐⭐ Fastest | C extension | Most platforms | Production |
-| **NumPy** | `NumpyAhocorasickNER` | ⭐⭐⭐⭐ | Pure Python + NumPy | Any OS | Portable, no C compiler |
-| **ONNX** | `OnnxAhocorasickNER` | ⭐⭐⭐⭐ | ONNX runtime | Browsers, mobile, edge | ML deployment, WASM |
+| **pyahocorasick** | `AhocorasickNER` | Fastest | C extension | Most platforms | Production |
+| **NumPy** | `NumpyAhocorasickNER` | Fast | Pure Python + NumPy | Any OS | Portable, no C compiler |
+| **ONNX** | `OnnxAhocorasickNER` | Fast | ONNX runtime | Browsers, mobile, edge | ML deployment, WASM |
 
 ---
 
@@ -21,23 +21,23 @@ C-based implementation wrapping the `pyahocorasick` library.
 **Import:**
 ```python
 from ahocorasick_ner import AhocorasickNER
-```text
+```
 
 **Characteristics:**
-- ⭐⭐⭐⭐⭐ **Fastest** (native C code)
-- **Production-ready** (mature, battle-tested)
+- **Fastest** (native C code)
+- **Production-ready** (mature, widely used)
 - **Standard choice** (default)
 
 **When to use:**
-- ✅ Performance is critical
-- ✅ Production deployment
-- ✅ Can compile C extensions
-- ✅ Linux/macOS/Windows with build tools
+- Performance is critical
+- Production deployment
+- Can compile C extensions
+- Linux/macOS/Windows with build tools
 
 **Installation:**
 ```bash
 uv pip install ahocorasick-ner
-```text
+```
 
 Requires C compiler:
 - **Linux**: `gcc`, `clang` (usually pre-installed)
@@ -49,19 +49,17 @@ Requires C compiler:
 # Benchmark: 10K entities, tagging 10K chars
 from ahocorasick_ner import AhocorasickNER
 import time
-
 ner = AhocorasickNER()
 for i in range(10000):
     ner.add_word("entity", f"entity_{i}")
 ner.fit()
-
 start = time.time()
 for _ in range(1000):
     list(ner.tag("entity_5000 is here" * 50))
 elapsed = time.time() - start
 print(f"1000 iterations: {elapsed:.2f}s ({1/elapsed:.0f} tags/sec)")
 # ~0.05s (20,000 tags/sec)
-```text
+```
 
 **API:**
 ```python
@@ -71,7 +69,7 @@ ner.fit()
 entities = list(ner.tag(text, min_word_len=5))
 ner.save(path)
 ner.load(path)
-```text
+```
 
 ---
 
@@ -82,49 +80,47 @@ Pure-Python implementation using NumPy arrays.
 **Import:**
 ```python
 from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
-```text
+```
 
 **Characteristics:**
-- ⭐⭐⭐⭐ **Fast** (optimized NumPy)
+- **Fast** (optimized NumPy)
 - **Pure Python** (no C compiler needed)
 - **Portable** (works on any OS with NumPy)
 - ~10-30% slower than pyahocorasick
 
 **When to use:**
-- ✅ Can't compile C extensions
-- ✅ Maximum cross-platform compatibility
-- ✅ Docker/containerized environments
-- ✅ Systems without build tools
-- ✅ Early prototyping
+- Can't compile C extensions
+- Maximum cross-platform compatibility
+- Docker/containerized environments
+- Systems without build tools
+- Early prototyping
 
 **Installation:**
 ```bash
 uv pip install ahocorasick-ner[numpy]
-```text
+```
 
 Or add to existing installation:
 ```bash
 uv pip install numpy
-```text
+```
 
 **Performance:**
 ```python
 # Benchmark: 10K entities, tagging 10K chars
 from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
 import time
-
 ner = NumpyAhocorasickNER()
 for i in range(10000):
     ner.add_word("entity", f"entity_{i}")
 ner.fit()
-
 start = time.time()
 for _ in range(1000):
     list(ner.tag("entity_5000 is here" * 50))
 elapsed = time.time() - start
 print(f"1000 iterations: {elapsed:.2f}s ({1/elapsed:.0f} tags/sec)")
-# ~0.10s (10,000 tags/sec) — ~2x slower than C backend
-```text
+# ~0.10s (10,000 tags/sec): ~2x slower than C backend
+```
 
 **Save/Load:**
 ```python
@@ -132,11 +128,10 @@ ner = NumpyAhocorasickNER()
 ner.add_word("artist", "Metallica")
 ner.fit()
 ner.save("model.npz")  # NumPy format
-
 # Later:
 ner2 = NumpyAhocorasickNER()
 ner2.load("model.npz")
-```text
+```
 
 **API (identical to pyahocorasick):**
 ```python
@@ -146,7 +141,7 @@ ner.fit()
 entities = list(ner.tag(text, min_word_len=5))
 ner.save(path)      # Saves .npz file
 ner.load(path)      # Loads .npz file
-```text
+```
 
 ---
 
@@ -157,25 +152,25 @@ ONNX (Open Neural Network Exchange) standard format for portable ML deployment.
 **Import:**
 ```python
 from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
-```text
+```
 
 **Characteristics:**
-- ⭐⭐⭐⭐ **Fast** (ONNX runtime optimizations)
+- **Fast** (ONNX runtime optimizations)
 - **Cross-platform** (works in browsers, mobile, servers)
 - **Standard format** (ONNX runtime, TensorFlow, PyTorch)
 - **Edge-ready** (WASM, TensorFlow Lite)
 
 **When to use:**
-- ✅ Deploying to diverse platforms (web, mobile, edge)
-- ✅ WASM (browser) execution
-- ✅ Container orchestration (Kubernetes)
-- ✅ MLOps pipelines (Airflow, Kubeflow)
-- ✅ Need ML interoperability
+- Deploying to diverse platforms (web, mobile, edge)
+- WASM (browser) execution
+- Container orchestration (Kubernetes)
+- MLOps pipelines (Airflow, Kubeflow)
+- Need ML interoperability
 
 **Installation:**
 ```bash
 uv pip install ahocorasick-ner[onnx]
-```text
+```
 
 Installs `onnx` and `onnxruntime`.
 
@@ -184,19 +179,17 @@ Installs `onnx` and `onnxruntime`.
 # Benchmark: 10K entities, tagging 10K chars
 from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
 import time
-
 ner = OnnxAhocorasickNER()
 for i in range(10000):
     ner.add_word("entity", f"entity_{i}")
 ner.fit()
-
 start = time.time()
 for _ in range(1000):
     list(ner.tag("entity_5000 is here" * 50))
 elapsed = time.time() - start
 print(f"1000 iterations: {elapsed:.2f}s ({1/elapsed:.0f} tags/sec)")
-# ~0.10s (10,000 tags/sec) — comparable to NumPy
-```text
+# ~0.10s (10,000 tags/sec): comparable to NumPy
+```
 
 **Save/Load:**
 ```python
@@ -204,11 +197,10 @@ ner = OnnxAhocorasickNER()
 ner.add_word("artist", "Metallica")
 ner.fit()
 ner.save("model")  # Creates model.onnx + model.npz
-
 # Later, in any ONNX runtime:
 ner2 = OnnxAhocorasickNER()
 ner2.load("model")
-```text
+```
 
 **Deploying to WASM (Browser):**
 
@@ -216,7 +208,7 @@ ner2.load("model")
 // Load ONNX model in browser with ONNX.js
 const session = await ort.InferenceSession.create('model.onnx');
 const result = await session.run(input);
-```text
+```
 
 See ONNX.js documentation for browser integration.
 
@@ -226,7 +218,7 @@ ONNX models can be converted to TFLite format:
 ```bash
 onnx-tf convert -i model.onnx -o model/
 tflite_convert --output_file=model.tflite --saved_model_dir=model/
-```text
+```
 
 **API (identical to pyahocorasick):**
 ```python
@@ -236,33 +228,30 @@ ner.fit()
 entities = list(ner.tag(text, min_word_len=5))
 ner.save(path)  # Saves model.onnx + model.npz
 ner.load(path)  # Loads from model.onnx + model.npz
-```text
+```
 
 ---
 
 ## Comparison Benchmarks
 
-Benchmark: 5K–50K entities, varying text lengths.
+Benchmark: 5K to 50K entities, varying text lengths.
 
 ### Match Time (ms for 1000 iterations)
 
 ```text
 Text: "entity_2500 is here" repeated N times
-
 Entities | 100 chars | 1K chars | 10K chars
 ----------|-----------|----------|----------
 5K        | 5 ms      | 30 ms    | 250 ms   (pyahocorasick)
 5K        | 10 ms     | 60 ms    | 500 ms   (numpy)
 5K        | 12 ms     | 70 ms    | 550 ms   (onnx)
-
 10K       | 8 ms      | 50 ms    | 400 ms   (pyahocorasick)
 10K       | 15 ms     | 100 ms   | 800 ms   (numpy)
 10K       | 18 ms     | 120 ms   | 900 ms   (onnx)
-
 50K       | 20 ms     | 150 ms   | 1100 ms  (pyahocorasick)
 50K       | 40 ms     | 300 ms   | 2200 ms  (numpy)
 50K       | 48 ms     | 360 ms   | 2400 ms  (onnx)
-```text
+```
 
 ### Memory Usage
 
@@ -272,7 +261,7 @@ Entities | pyahocorasick | NumPy | ONNX
 5K        | ~2 MB        | ~3 MB | ~3 MB
 10K       | ~4 MB        | ~6 MB | ~6 MB
 50K       | ~20 MB       | ~30 MB| ~30 MB
-```text
+```
 
 ### Installation Size
 
@@ -283,43 +272,40 @@ pyahocorasick| ~500 KB (compiled binary)
 numpy        | ~20 MB
 onnx         | ~10 MB
 onnxruntime  | ~50 MB
-```text
+```
 
 ---
 
 ## Migration Between Backends
 
-All backends share the same API — switching requires only changing the import:
+All backends share the same API: switching requires only changing the import:
 
 **Before (pyahocorasick):**
 ```python
 from ahocorasick_ner import AhocorasickNER
-
 ner = AhocorasickNER()
 ner.add_word("artist", "Metallica")
 ner.fit()
 entities = list(ner.tag("I like Metallica"))
-```text
+```
 
 **After (NumPy):**
 ```python
 from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
-
 ner = NumpyAhocorasickNER()  # Only change: class name
 ner.add_word("artist", "Metallica")
 ner.fit()
 entities = list(ner.tag("I like Metallica"))
-```text
+```
 
 **After (ONNX):**
 ```python
 from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
-
 ner = OnnxAhocorasickNER()  # Only change: class name
 ner.add_word("artist", "Metallica")
 ner.fit()
 entities = list(ner.tag("I like Metallica"))
-```text
+```
 
 ---
 
@@ -351,6 +337,9 @@ entities = list(ner.tag("I like Metallica"))
 
 ## See Also
 
-- **[API Reference](api-reference.md)** — Detailed method documentation
-- **[Performance](performance.md)** — Profiling and optimization
-- **[Algorithms](algorithms.md)** — How Aho-Corasick works internally
+- **[API Reference](api-reference.md)**: Detailed method documentation
+- **[Performance](performance.md)**: Profiling and optimization
+- **[Algorithms](algorithms.md)**: How Aho-Corasick works internally
+
+---
+[← API Reference](api-reference.md) · [Home](index.md) · [Algorithms →](algorithms.md)

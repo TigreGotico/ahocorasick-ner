@@ -8,7 +8,7 @@ Use ahocorasick-ner as a plugin in OpenVoiceOS skills.
 
 The library includes an **IntentTransformer** plugin for OpenVoiceOS that automatically extracts entities and injects them into the intent match context.
 
-**Plugin:** `AhocorasickNERTransformer` — `ahocorasick_ner/opm.py:16`
+**Plugin:** `AhocorasickNERTransformer`: `ahocorasick_ner/opm.py:16`
 
 ---
 
@@ -22,7 +22,7 @@ class MySkill(OVOSSkill):
         # Register entities for recognition
         self.register_entity("artist_name", ["Metallica", "Iron Maiden"])
         self.register_entity("album", ["Master of Puppets"])
-```text
+```
 
 ### 2. Plugin Listens
 
@@ -44,7 +44,7 @@ def handle_music_intent(self, message):
     entities = message.data.get("entities", [])
     for entity in entities:
         print(f"Matched: {entity['word']} ({entity['label']})")
-```text
+```
 
 ---
 
@@ -55,13 +55,13 @@ def handle_music_intent(self, message):
 ```bash
 # In your OVOS environment
 uv pip install ahocorasick-ner
-```text
+```
 
 The plugin is automatically discovered via entry point:
 ```toml
 [project.entry-points."opm.transformer.intent"]
 ovos-ahocorasick-ner-plugin = "ahocorasick_ner.opm:AhocorasickNERTransformer"
-```text
+```
 
 ### Enable in Config
 
@@ -75,7 +75,7 @@ Add to `~/.config/mycroft/mycroft.conf` or skill config:
     }
   }
 }
-```text
+```
 
 ---
 
@@ -87,10 +87,8 @@ Add to `~/.config/mycroft/mycroft.conf` or skill config:
 from ovos_workshop.skills.ovos import OVOSSkill
 from ovos_workshop.decorators import intent_handler
 from ovos_bus_client.message import Message
-
 class MusicSkill(OVOSSkill):
     """Recommend music based on user preferences"""
-
     def initialize(self):
         """Called when skill loads"""
         # Register artist vocabulary
@@ -100,7 +98,6 @@ class MusicSkill(OVOSSkill):
             "Black Sabbath",
             "AC/DC"
         ])
-
         # Register album vocabulary
         self.register_entity("album", [
             "Master of Puppets",
@@ -108,25 +105,20 @@ class MusicSkill(OVOSSkill):
             "Paranoid",
             "Back in Black"
         ])
-
         self.log.info("Music entities registered")
-
     @intent_handler("play.music.intent")
     def handle_play_music(self, message):
         """User wants to play music"""
         # Extracted entities from message
         entities = message.data.get("entities", [])
-
         artist = None
         album = None
-
         # Parse extracted entities
         for entity in entities:
             if entity["label"] == "artist_name":
                 artist = entity["word"]
             elif entity["label"] == "album":
                 album = entity["word"]
-
         # Respond
         if artist and album:
             self.speak(f"Playing {album} by {artist}")
@@ -136,13 +128,11 @@ class MusicSkill(OVOSSkill):
             self.speak(f"Playing {album}")
         else:
             self.speak("I didn't understand which music to play")
-
     def stop(self):
         pass
-
 def create_skill():
     return MusicSkill()
-```text
+```
 
 ### Corresponding Intent File
 
@@ -154,7 +144,7 @@ play {album}
 play music from {artist_name}
 i want to hear {artist_name}
 put on {album}
-```text
+```
 
 ---
 
@@ -167,17 +157,15 @@ Register entities from a skill:
 ```python
 # From a list
 self.register_entity("artist_name", ["Metallica", "Iron Maiden"])
-
 # From a file
 self.register_entity("artist_name", file_name="vocab/en-us/artists.txt")
-
 # With blacklisted words (excluded from matching)
 self.register_entity(
     "artist_name",
     ["Metallica", "Iron Maiden"],
     blacklisted_words=["metal", "music"]
 )
-```text
+```
 
 ### register_vocab (alternative)
 
@@ -185,7 +173,7 @@ For non-entity intent matching:
 
 ```python
 self.register_vocab("Metallica")
-```text
+```
 
 ---
 
@@ -203,7 +191,7 @@ self.register_vocab("Metallica")
         "skill_id": "my-music-skill"
     }
 }
-```text
+```
 
 ### After NER Processing
 
@@ -231,7 +219,7 @@ self.register_vocab("Metallica")
         "skill_id": "my-music-skill"
     }
 }
-```text
+```
 
 ---
 
@@ -267,7 +255,7 @@ Add to your skill's `settingsmeta.json` or config section:
     ]
   }
 }
-```text
+```
 
 ### Global Config
 
@@ -285,7 +273,7 @@ Add to `mycroft.conf` to configure all NER-enabled skills:
     }
   }
 }
-```text
+```
 
 ---
 
@@ -295,10 +283,9 @@ Add to `mycroft.conf` to configure all NER-enabled skills:
 
 ```python
 from ovos_plugin_manager.templates.transformers import IntentTransformer
-
 transformers = IntentTransformer.get_available_plugins()
 print(transformers)  # Should include "ovos-ahocorasick-ner-plugin"
-```text
+```
 
 ### Log Entity Matches
 
@@ -308,10 +295,9 @@ In your skill:
 def handle_play_music(self, message):
     entities = message.data.get("entities", [])
     self.log.debug(f"Extracted {len(entities)} entities: {entities}")
-
     for entity in entities:
         self.log.info(f"Entity: {entity['word']} ({entity['label']})")
-```text
+```
 
 ### Check Bus Messages
 
@@ -321,7 +307,7 @@ Monitor the OVOS bus:
 ovos-bus-client
 # In another terminal:
 # Your skill will emit messages, watch for "entities" in data
-```text
+```
 
 ---
 
@@ -332,26 +318,24 @@ ovos-bus-client
 Register entities that are core to your skill's intent matching:
 
 ```python
-# ✅ DO: Register entities relevant to skill
+# DO: Register entities relevant to skill
 self.register_entity("artist", ["Metallica", "Iron Maiden"])
-
-# ❌ DON'T: Register every possible word
+# DON'T: Register every possible word
 self.register_entity("word", ["the", "a", "is", ...])
-```text
+```
 
 ### 2. Use Meaningful Labels
 
 Choose descriptive entity labels:
 
 ```python
-# ✅ Good: Specific labels
+# Good: Specific labels
 self.register_entity("artist_name", [...])
 self.register_entity("song_title", [...])
-
-# ❌ Bad: Generic labels
+# Bad: Generic labels
 self.register_entity("entity1", [...])
 self.register_entity("entity2", [...])
-```text
+```
 
 ### 3. Keep Vocabularies Up-to-Date
 
@@ -362,7 +346,7 @@ def on_skill_update(self):
     """Called when skill updates"""
     # Re-register with new entities
     self.register_entity("artist", self.get_artists())
-```text
+```
 
 ### 4. Fallback for Missing Entities
 
@@ -375,7 +359,6 @@ def handle_music_intent(self, message):
         if entity["label"] == "artist":
             artist = entity["word"]
             break
-
     if artist:
         self.play_artist(artist)
     else:
@@ -383,7 +366,7 @@ def handle_music_intent(self, message):
         artist = self.get_response("Which artist?")
         if artist:
             self.play_artist(artist)
-```text
+```
 
 ### 5. Test Entity Registration
 
@@ -397,11 +380,10 @@ def test_artist_entity_extraction(self):
         data={"utterances": ["play Metallica"]},
         context={"skill_id": self.skill.skill_id}
     )
-
     # Simulate transformer processing
     # Check that entities are populated
     assert msg.data.get("entities"), "No entities extracted"
-```text
+```
 
 ---
 
@@ -412,12 +394,12 @@ def test_artist_entity_extraction(self):
 1. **Check if plugin is loaded:**
    ```bash
    ovos-config show | grep ahocorasick
-```text
+```
 
 2. **Verify entities are registered:**
    ```python
    self.log.info(f"Registered entities: {self.entities}")
-```text
+```
 
 3. **Check utterance matches exactly:**
    - Whitespace and capitalization matter
@@ -427,9 +409,9 @@ def test_artist_entity_extraction(self):
 
 If NER is slow:
 
-1. **Reduce vocabulary size** — remove unused entities
-2. **Increase min_word_len** — filter short matches
-3. **Switch backends** — try NumPy or ONNX
+1. **Reduce vocabulary size**: remove unused entities
+2. **Increase min_word_len**: filter short matches
+3. **Switch backends**: try NumPy or ONNX
 
 ```python
 # In transformer config
@@ -439,12 +421,15 @@ If NER is slow:
     "backend": "numpy"  # Use NumPy instead of pyahocorasick
   }
 }
-```text
+```
 
 ---
 
 ## See Also
 
-- **[API Reference](api-reference.md)** — Full method documentation
-- **[Examples](examples.md)** — Usage patterns
-- **[OVOS Documentation](https://openvoiceos.github.io/)** — Main OVOS docs
+- **[API Reference](api-reference.md)**: Full method documentation
+- **[Examples](examples.md)**: Usage patterns
+- **[OVOS Documentation](https://openvoiceos.github.io/)**: Main OVOS docs
+
+---
+[← Examples](examples.md) · [Home](index.md) · [Datasets →](datasets.md)

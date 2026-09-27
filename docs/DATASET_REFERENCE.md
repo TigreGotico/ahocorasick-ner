@@ -1,4 +1,4 @@
-# Dataset Reference — ahocorasick-ner
+# Dataset Reference: ahocorasick-ner
 
 Complete reference for all available dataset loaders with entity type labels, sizes, and usage.
 
@@ -15,20 +15,18 @@ Many dataset loaders support filtering by column values to extract only entities
 - Production-friendly: load only what you need
 
 **Supported Loaders:**
-- `MetalArchivesBandsNER` — filter by `origin` (country)
-- `MetalArchivesTrackNER` — filter by `band_origin` (country)
-- `SpotifyTracksNER` — filter by `genre`
-- `GenericHFDatasetNER` — filter by any column with `filter_column` and `filter_value`
+- `MetalArchivesBandsNER`: filter by `origin` (country)
+- `MetalArchivesTrackNER`: filter by `band_origin` (country)
+- `SpotifyTracksNER`: filter by `genre`
+- `GenericHFDatasetNER`: filter by any column with `filter_column` and `filter_value`
 
 **Examples:**
 
 ```python
 # Metal bands from Portugal only
 pt_bands = MetalArchivesBandsNER(origin="Portugal")
-
 # Rock tracks from Spotify
 rock = SpotifyTracksNER(genre="rock")
-
 # Generic: Brazilian metal bands
 brazil = GenericHFDatasetNER(
     entity_type="MetalBand",
@@ -66,7 +64,6 @@ Dedicated subclasses eliminate the need to know Wikidata QIDs. Use these for str
 **Usage Example:**
 ```python
 from ahocorasick_ner.datasets import WikidataAnimalNER, WikidataCountryNER
-
 animals = WikidataAnimalNER()  # Q729
 countries = WikidataCountryNER(lang="de-de")  # Q6256, German labels
 professions = WikidataProfessionNER()  # Q28640
@@ -113,16 +110,12 @@ professions = WikidataProfessionNER()  # Q28640
 ```python
 # Popular rock tracks (>70 popularity)
 rock = SpotifyTracksNER(genre="rock", popularity_min=70)
-
 # Danceability dance tracks
 dance = SpotifyTracksNER(genre="dance", danceability_min=0.7)
-
 # High-energy, high-valence (happy) tracks
 upbeat = SpotifyTracksNER(energy_min=0.8, valence_min=0.7)
-
 # Only explicit-free tracks
 clean = SpotifyTracksNER(explicit=False)
-
 # Acoustic tracks
 acoustic = SpotifyTracksNER(acousticness_min=0.8)
 ```
@@ -140,16 +133,12 @@ acoustic = SpotifyTracksNER(acousticness_min=0.8)
 ```python
 # Ingredients from Gathered recipes only
 gathered = RecipeIngredientsNER(source="Gathered")
-
 # Gluten-free food products
 gluten_free = FoodProductsNER(allergen="gluten-free")
-
 # Vegan products only
 vegan = FoodProductsNER(vegan=True)
-
 # Organic products from France
 organic_fr = FoodProductsNER(organic=True, country="fr")
-
 # Nut-free vegetarian products
 safe_veg = FoodProductsNER(allergen="tree-nut-free", vegetarian=True)
 ```
@@ -174,7 +163,6 @@ safe_veg = FoodProductsNER(allergen="tree-nut-free", vegetarian=True)
 **Usage Example:**
 ```python
 from ahocorasick_ner.datasets import GeoNamesNER, PersonNamesNER
-
 cities = GeoNamesNER()  # 280k+ cities worldwide
 names = PersonNamesNER()  # 50k+ surnames, 30+ countries
 ```
@@ -211,16 +199,13 @@ chemicals = BC5CDRMedicalNER(entity_type="Chemical")
 ```python
 # Portuguese metal bands only
 pt_bands = MetalArchivesBandsNER(origin="Portugal")
-
 # Thrash metal bands from 1980-1995
 thrash = MetalArchivesBandsNER(genre="Thrash Metal",
                                 formed_year_min=1980,
                                 formed_year_max=1995)
-
 # Studio full-length albums from Swedish bands
 swedish_albums = MetalArchivesTrackNER(band_origin="Sweden",
                                         album_type="Full-length")
-
 # Demo tracks only
 demos = MetalArchivesTrackNER(album_type="Demo")
 ```
@@ -238,7 +223,6 @@ demos = MetalArchivesTrackNER(album_type="Demo")
 ```python
 # Female actors only (actresses)
 actresses = MovieActorNER(gender="Female")
-
 # Male actors only
 actors = MovieActorNER(gender="Male")
 ```
@@ -270,7 +254,6 @@ colors = GenericHFDatasetNER(
     hf_dataset="boltuix/color-pedia",
     column="name"
 )
-
 # Load warm colors only
 warm_colors = GenericHFDatasetNER(
     entity_type="Color",
@@ -279,7 +262,6 @@ warm_colors = GenericHFDatasetNER(
     filter_column="color_family",
     filter_value="warm"
 )
-
 # Load Brazilian metal bands only
 brazil_bands = GenericHFDatasetNER(
     entity_type="MetalBand",
@@ -288,7 +270,6 @@ brazil_bands = GenericHFDatasetNER(
     filter_column="origin",
     filter_value="Brazil"
 )
-
 # Load any entity type from Wikidata by QID
 instruments = WikidataEntityNER(
     entity_type="Instrument",
@@ -318,7 +299,6 @@ instruments = WikidataEntityNER(
 ```bash
 # Core ahocorasick-ner
 pip install ahocorasick-ner
-
 # With HuggingFace dataset support
 pip install "ahocorasick-ner[datasets]"
 ```
@@ -339,5 +319,8 @@ pip install "ahocorasick-ner[datasets]"
 
 ## See Also
 
-- [simple-NER integration](../../../DEPRECATED/simple_NER/docs/FAQ.md) — Use these in pipelines
+- [simple-NER integration](../../../DEPRECATED/simple_NER/docs/FAQ.md): Use these in pipelines
 - Examples: [basic_usage.py](../examples/basic_usage.py), [benchmark.py](../examples/benchmark.py)
+
+---
+[← Datasets](datasets.md) · [Home](index.md) · [Performance →](performance.md)

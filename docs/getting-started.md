@@ -6,18 +6,18 @@
 
 ```bash
 uv pip install ahocorasick-ner
-```text
+```
 
 Or with pip:
 ```bash
 pip install ahocorasick-ner
-```text
+```
 
 ### Optional: NumPy Backend
 
 ```bash
 uv pip install ahocorasick-ner[numpy]
-```text
+```
 
 Pure-Python NER without C dependencies. Useful for environments where compiling extensions is difficult.
 
@@ -25,7 +25,7 @@ Pure-Python NER without C dependencies. Useful for environments where compiling 
 
 ```bash
 uv pip install ahocorasick-ner[onnx]
-```text
+```
 
 Export models to ONNX format for edge computing, WASM, and cross-platform deployment.
 
@@ -33,7 +33,7 @@ Export models to ONNX format for edge computing, WASM, and cross-platform deploy
 
 ```bash
 uv pip install ahocorasick-ner[datasets]
-```text
+```
 
 Load pre-built vocabularies from HuggingFace (Metal Archives, Music, IMDB).
 
@@ -41,38 +41,34 @@ Load pre-built vocabularies from HuggingFace (Metal Archives, Music, IMDB).
 
 ```bash
 uv pip install ahocorasick-ner[numpy,onnx,datasets]
-```text
+```
 
 ---
 
-## Your First NER System — 5 Minutes
+## Your First NER System: 5 Minutes
 
 ### 1. Basic Setup
 
 ```python
 from ahocorasick_ner import AhocorasickNER
-
 # Create NER system
 ner = AhocorasickNER()
-
 # Add entities
 ner.add_word("artist", "Metallica")
 ner.add_word("artist", "Iron Maiden")
 ner.add_word("album", "Master of Puppets")
 ner.add_word("album", "The Number of the Beast")
-
 # Finalize automaton
 ner.fit()
-```text
+```
 
 ### 2. Extract Entities
 
 ```python
 text = "I love Metallica's Master of Puppets and Iron Maiden's The Number of the Beast"
-
 for entity in ner.tag(text):
     print(entity)
-```text
+```
 
 Output:
 ```python
@@ -80,7 +76,7 @@ Output:
 {'start': 22, 'end': 40, 'word': 'Master of Puppets', 'label': 'album'}
 {'start': 46, 'end': 57, 'word': 'Iron Maiden', 'label': 'artist'}
 {'start': 62, 'end': 87, 'word': 'The Number of the Beast', 'label': 'album'}
-```text
+```
 
 ### 3. Case Sensitivity
 
@@ -91,23 +87,20 @@ ner = AhocorasickNER(case_sensitive=True)
 ner.add_word("name", "Apple")      # Only matches "Apple", not "apple"
 ner.add_word("fruit", "apple")      # Different entity, exact case
 ner.fit()
-
 ner.tag("I use Apple computers and eat apples")
-```text
+```
 
 ### 4. Save and Load
 
 ```python
 # After training, save for reuse
 ner.save("music_ner.ahocorasick")
-
 # Later, load the trained automaton
 ner2 = AhocorasickNER()
 ner2.load("music_ner.ahocorasick")
-
 # Ready to use immediately (no re-fitting needed)
 list(ner2.tag("Metallica is great"))
-```text
+```
 
 ---
 
@@ -117,32 +110,28 @@ list(ner2.tag("Metallica is great"))
 
 ```python
 from ahocorasick_ner import AhocorasickNER
-
 ner = AhocorasickNER()
 ner.add_word("company", "Microsoft")
 ner.add_word("company", "Apple")
 ner.fit()
-
 results = list(ner.tag("Microsoft and Apple are tech giants"))
 print(results)
-```text
+```
 
 ### Pattern 2: Batch Processing
 
 ```python
 ner = AhocorasickNER()
 # ... add entities and fit ...
-
 documents = [
     "Metallica released Master of Puppets in 1986",
     "Iron Maiden's debut album was revolutionary",
     "Black Sabbath pioneered heavy metal music"
 ]
-
 for doc in documents:
     for entity in ner.tag(doc):
         print(f"Doc: {doc[:30]}... | Entity: {entity['label']}")
-```text
+```
 
 ### Pattern 3: Entity Management
 
@@ -152,17 +141,14 @@ ner = AhocorasickNER()
 ner.add_word("artist", "Metallica")
 ner.add_word("artist", "Iron Maiden")
 ner.fit()
-
 # Use it
 entities = list(ner.tag("Metallica and Iron Maiden"))
-
 # Later, add more entities (need to re-fit)
 ner.add_word("artist", "Black Sabbath")  # Automatically marks as unfitted
 ner.fit()  # Re-finalize
-
 # Continue using
 entities = list(ner.tag("Black Sabbath is awesome"))
-```text
+```
 
 ---
 
@@ -175,11 +161,11 @@ entities = list(ner.tag("Black Sabbath is awesome"))
 ```python
 from ahocorasick_ner import AhocorasickNER
 ner = AhocorasickNER()
-```text
+```
 
 **Pros:**
-- ⭐⭐⭐⭐⭐ Fastest (C implementation)
-- Mature, battle-tested algorithm
+- Fastest (C implementation)
+- Mature, widely used algorithm
 - Efficient memory usage
 
 **Cons:**
@@ -193,7 +179,7 @@ ner = AhocorasickNER()
 ```python
 from ahocorasick_ner.numpy_backend import NumpyAhocorasickNER
 ner = NumpyAhocorasickNER()
-```text
+```
 
 **Pros:**
 - Pure Python (no C compilation)
@@ -212,7 +198,7 @@ ner = NumpyAhocorasickNER()
 from ahocorasick_ner.onnx_backend import OnnxAhocorasickNER
 ner = OnnxAhocorasickNER()
 ner.save("model")  # Creates model.onnx + model.npz
-```text
+```
 
 **Pros:**
 - ONNX standard format (widely supported)
@@ -229,8 +215,11 @@ See **[Backends](backends.md)** for detailed comparison and benchmarks.
 
 ## Next Steps
 
-- **[API Reference](api-reference.md)** — All methods and parameters
-- **[Examples](examples.md)** — Real-world usage patterns
-- **[Datasets](datasets.md)** — Load pre-built vocabularies
-- **[Integration](integration.md)** — Use with OpenVoiceOS
-- **[Performance](performance.md)** — Optimize for your use case
+- **[API Reference](api-reference.md)**: All methods and parameters
+- **[Examples](examples.md)**: Real-world usage patterns
+- **[Datasets](datasets.md)**: Load pre-built vocabularies
+- **[Integration](integration.md)**: Use with OpenVoiceOS
+- **[Performance](performance.md)**: Optimize for your use case
+
+---
+[Home](index.md) · [API Reference →](api-reference.md)

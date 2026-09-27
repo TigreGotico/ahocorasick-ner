@@ -1,36 +1,44 @@
 # Changelog
 
-## [0.3.0a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.0a1) (2026-04-01)
+## [0.3.2a4](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.2a4) (2026-09-27)
 
-[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.2.0a1...0.3.0a1)
-
-**Merged pull requests:**
-
-- feat: add advanced filtering to dataset loaders [\#13](https://github.com/TigreGotico/ahocorasick-ner/pull/13) ([JarbasAl](https://github.com/JarbasAl))
-
-## [0.2.0a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.2.0a1) (2026-04-01)
-
-[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.2a2...0.2.0a1)
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.2a3...0.3.2a4)
 
 **Merged pull requests:**
 
-- feat: Add ONNX/NumPy backends, modernize packaging, and expand documentation [\#12](https://github.com/TigreGotico/ahocorasick-ner/pull/12) ([JarbasAl](https://github.com/JarbasAl))
+- Update actions/setup-python action to v7 [\#17](https://github.com/TigreGotico/ahocorasick-ner/pull/17) ([renovate[bot]](https://github.com/apps/renovate))
 
-## [0.1.2a2](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.2a2) (2025-12-19)
+## [0.3.2a3](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.2a3) (2026-09-26)
 
-[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.2a1...0.1.2a2)
-
-**Merged pull requests:**
-
-- chore\(deps\): update actions/setup-python action to v6 [\#10](https://github.com/TigreGotico/ahocorasick-ner/pull/10) ([renovate[bot]](https://github.com/apps/renovate))
-
-## [0.1.2a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.1.2a1) (2025-12-18)
-
-[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.1.1...0.1.2a1)
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.2a2...0.3.2a3)
 
 **Merged pull requests:**
 
-- chore: Configure Renovate [\#5](https://github.com/TigreGotico/ahocorasick-ner/pull/5) ([renovate[bot]](https://github.com/apps/renovate))
+- Update dependency python to 3.14 [\#7](https://github.com/TigreGotico/ahocorasick-ner/pull/7) ([renovate[bot]](https://github.com/apps/renovate))
+
+## [0.3.2a2](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.2a2) (2026-09-19)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.2a1...0.3.2a2)
+
+**Merged pull requests:**
+
+- ci: publish the alpha through the shared workflow, no setup.py [\#22](https://github.com/TigreGotico/ahocorasick-ner/pull/22) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [0.3.2a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.2a1) (2026-09-18)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.1a1...0.3.2a1)
+
+**Merged pull requests:**
+
+- fix: import expand and standardize\_lang from ovos-spec-tools [\#20](https://github.com/TigreGotico/ahocorasick-ner/pull/20) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
+## [0.3.1a1](https://github.com/TigreGotico/ahocorasick-ner/tree/0.3.1a1) (2026-07-30)
+
+[Full Changelog](https://github.com/TigreGotico/ahocorasick-ner/compare/0.3.0...0.3.1a1)
+
+**Merged pull requests:**
+
+- docs: rewrite README in Simplified Technical English [\#18](https://github.com/TigreGotico/ahocorasick-ner/pull/18) ([JarbasAl](https://github.com/JarbasAl))
 
 
 

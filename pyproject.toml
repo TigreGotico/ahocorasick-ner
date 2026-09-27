@@ -27,6 +27,7 @@ classifiers = [
 opm = [
     "ovos-plugin-manager",
     "ovos-utils",
+    "ovos-spec-tools",
     "ovos-bus-client"
 ]
 numpy = [
@@ -58,6 +59,7 @@ dev = [
 all = [
     "ovos-plugin-manager",
     "ovos-utils",
+    "ovos-spec-tools",
     "ovos-bus-client",
     "numpy",
     "onnx",
